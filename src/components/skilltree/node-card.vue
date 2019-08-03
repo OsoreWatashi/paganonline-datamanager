@@ -46,6 +46,15 @@
   </div>
 </template>
 
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
+@Component({
+  name: 'node-card'
+})
+export default class NodeCard extends Vue { }
+</script>
+
 <style lang="scss" scoped>
   .node {
     display: flex;

@@ -3,13 +3,19 @@
     <div class="menu">
       <a class="button disabled" href="javascript:void(0)">Add node</a>
       <a class="button" href="javascript:void(0)">Save node</a>
+      <a class="button" href="javascript:void(0)">Close node</a>
     </div>
-    <node-card/>
+
+    <node-filter />
+    <node-tree />
+    <node-card />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import NodeFilter from '@/components/skilltree/node-filter.vue';
+import NodeTree from '@/components/skilltree/node-tree.vue';
 import NodeCard from '@/components/skilltree/node-card.vue';
 import { ICharacter } from '@/types';
 import CharacterFactory from '@/factories/skilltree/character-factory';
@@ -17,6 +23,8 @@ import CharacterFactory from '@/factories/skilltree/character-factory';
 @Component({
   name: 'index',
   components: {
+    'node-filter': NodeFilter,
+    'node-tree': NodeTree,
     'node-card': NodeCard
   }
 })
