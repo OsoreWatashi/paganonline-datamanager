@@ -1,5 +1,14 @@
 import { Module } from 'vuex';
 
-export default class Store implements Module<any, any> {
+const defaultState: SkillTree.IState = {
+  selectedCharacter: {
+    displayName: '',
+    technicalName: ''
+  }
+};
+
+export default class Store implements Module<SkillTree.IState, any> {
   public namespaced: boolean = true;
+
+  public state: SkillTree.IState = defaultState;
 }
