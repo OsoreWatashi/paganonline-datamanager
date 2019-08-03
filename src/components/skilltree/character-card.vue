@@ -20,6 +20,7 @@ export default class CharacterCard extends Vue {
 
 <style lang="scss" scoped>
   .character-card {
+
     display: flex;
     flex-direction: column;
     color: black;
@@ -32,13 +33,13 @@ export default class CharacterCard extends Vue {
 
     &.router-link-active {
       > img {
-        filter: saturate(100%);
+        filter: saturate(100%) drop-shadow(0 0 20px rgba(0,0,0,0.5));
       }
     }
 
     &:not(.router-link-active) {
       > img:hover {
-        filter: saturate(33%);
+        filter: saturate(33%)  drop-shadow(0 0 20px rgba(0,0,0,0.33));
       }
     }
   }
