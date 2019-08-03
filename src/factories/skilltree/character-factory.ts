@@ -6,7 +6,7 @@ const characters: ICharacter[] = [
   { displayName: 'Istok', technicalName: 'istok' },
   { displayName: 'Kingewitch', technicalName: 'kingewitch' },
   { displayName: 'Lukian', technicalName: 'lukian' },
-  { displayName: 'Marokh', technicalName: 'marokh' },
+  { displayName: 'Morokh', technicalName: 'morokh' },
   { displayName: 'Masha', technicalName: 'masha' },
   { displayName: 'Valeria', technicalName: 'valeria' }].sort((x, y) => x.displayName < y.displayName ? -1 : 1);
 
