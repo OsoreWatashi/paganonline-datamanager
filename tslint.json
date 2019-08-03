@@ -19,6 +19,7 @@
     "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"],
     "trailing-comma": [false],
     "member-ordering": [false],
-    "no-bitwise": false
+    "no-bitwise": false,
+    "object-literal-key-quotes": [false]
   }
 }
