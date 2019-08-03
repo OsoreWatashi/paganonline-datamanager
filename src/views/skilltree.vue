@@ -12,6 +12,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import CharacterCard from '@/components/skilltree/character-card.vue';
 import { ICharacter } from '@/types';
+import CharacterFactory from '@/factories/skilltree/character-factory';
 
 @Component({
   name: 'skilltree-view',
@@ -20,16 +21,8 @@ import { ICharacter } from '@/types';
   }
 })
 export default class SkilltreeView extends Vue {
-  public get characters(): ICharacter[] {
-    return [
-      { displayName: 'Anya', technicalName: 'anya' },
-      { displayName: 'Dameer', technicalName: 'dameer' },
-      { displayName: 'Istok', technicalName: 'istok' },
-      { displayName: 'Kingewitch', technicalName: 'kingewitch' },
-      { displayName: 'Lukian', technicalName: 'lukian' },
-      { displayName: 'Marokh', technicalName: 'marokh' },
-      { displayName: 'Masha', technicalName: 'masha' },
-      { displayName: 'Valeria', technicalName: 'valeria' }];
+  public get characters(): ReadonlyArray<ICharacter> {
+    return CharacterFactory.getCharacters();
   }
 }
 </script>
