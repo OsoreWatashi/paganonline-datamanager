@@ -1,7 +1,8 @@
 <template>
   <div class="skilltree-view">
     <div class="menu">
-      <a class="button" href="javascript:void(0)">Add node</a>
+      <a class="button disabled" href="javascript:void(0)">Add node</a>
+      <a class="button" href="javascript:void(0)">Save node</a>
     </div>
     <node-card/>
   </div>
@@ -31,6 +32,7 @@ export default class Index extends Vue {
       display: flex;
       flex-direction: row;
       align-items: flex-end;
+      margin-bottom: 10px;
 
       .button {
         font-size: 16px;
@@ -39,6 +41,11 @@ export default class Index extends Vue {
         text-transform: uppercase;
         color: rgb(255,255,255);
         text-decoration: none;
+
+        &.disabled {
+          filter: saturate(25%);
+          cursor: not-allowed;
+        }
 
         &:first-child {
           margin-left: auto;
