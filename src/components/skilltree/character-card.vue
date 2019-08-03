@@ -1,6 +1,6 @@
 <template>
   <router-link :to="'/skilltree/' + character.technicalName" class="character-card">
-    <img :src="require('@/assets/skilltree/' + character.technicalName + '.png')" />
+    <img :src="require('@/assets/skilltree/characters/cards/' + character.technicalName + '.png')" />
     {{character.displayName}}
   </router-link>
 </template>

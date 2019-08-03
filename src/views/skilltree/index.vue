@@ -8,7 +8,7 @@
 
     <node-filter />
     <node-tree />
-    <node-card />
+    <node-card class="node-card" />
   </div>
 </template>
 
@@ -61,6 +61,10 @@ export default class Index extends Vue {
           margin-left: 5px;
         }
       }
+    }
+
+    .node-card {
+      margin-top: 25px;
     }
   }
 </style>
