@@ -1,22 +1,22 @@
 <template>
   <div class="skilltree-view">
     <div class="menu">
-      <a class="button" href="javascript:void(0)">Add skill</a>
+      <a class="button" href="javascript:void(0)">Add node</a>
     </div>
-    <node/>
+    <node-card/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import Node from '@/components/skilltree/node.vue';
+import NodeCard from '@/components/skilltree/node-card.vue';
 import { ICharacter } from '@/types';
 import CharacterFactory from '@/factories/skilltree/character-factory';
 
 @Component({
   name: 'index',
   components: {
-    Node
+    'node-card': NodeCard
   }
 })
 export default class Index extends Vue {

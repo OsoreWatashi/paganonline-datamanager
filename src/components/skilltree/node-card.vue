@@ -2,6 +2,7 @@
   <div class="node">
     <div class="group name">
       <span class="group-header">Name</span>
+      <label for="">ID</label><input type="number" />
       <label for="">Display name</label><input type="text" />
       <label for="">Technical name</label><input type="text" />
       <label for="">Type</label><select><option>Ability</option><option>Major</option><option>Minor</option></select>
@@ -24,11 +25,23 @@
         <div class="set"><input type="text" /><a href="javascript:void(0)" class="button">Remove</a></div>
         <div class="set"><input type="text" /><a href="javascript:void(0)" class="button">Remove</a></div>
       </div>
-      <a class="button" href="javascript:void(0)">Add</a>
+      <div class="button-group">
+        <a class="button" href="javascript:void(0)">Add</a>
+      </div>
     </div>
-    <div class="group children">
-      <span class="group-header">Children</span>
-      <a class="button" href="javascript:void(0)">Add</a>
+    <div class="group hierarchy">
+      <span class="group-header">Hierarchy</span>
+      <div class="sets">
+        <div class="set"><label>Parent</label><a href="javascript:void(0)" class="node-link">Parent node</a></div>
+        <div class="set"><a href="javascript:void(0)" class="node-link">Child I</a><a href="javascript:void(0)" class="button">Remove</a></div>
+        <div class="set"><a href="javascript:void(0)" class="node-link">Child II</a><a href="javascript:void(0)" class="button">Remove</a></div>
+        <div class="set"><a href="javascript:void(0)" class="node-link">Child III</a><a href="javascript:void(0)" class="button">Remove</a></div>
+        <div class="set"><input type="text" /><a href="javascript:void(0)" class="button">Add</a></div>
+      </div>
+      <div class="button-group">
+        <a class="button" href="javascript:void(0)">Add child</a>
+        <a class="button" href="javascript:void(0)">Update parent</a>
+      </div>
     </div>
   </div>
 </template>
@@ -99,6 +112,11 @@
       }
     }
 
+    .button-group {
+      margin-left: auto;
+      display: flex;
+    }
+
     .button {
       font-size: 16px;
       padding: 10px;
@@ -108,7 +126,9 @@
       text-decoration: none;
       align-self: flex-start;
 
-      margin-left: auto;
+      &:not(:first-child) {
+        margin-left: 5px;
+      }
     }
   }
 </style>
