@@ -47,7 +47,7 @@ export default class SkilltreeView extends Vue {
       box-sizing: border-box;
       width: 500px;
       margin: 25px 0 25px;
-      border-bottom: 1px solid black;
+      border-bottom: 1px solid rgb(219,191,143);
     }
   }
 </style>
