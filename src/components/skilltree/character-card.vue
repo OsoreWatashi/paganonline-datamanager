@@ -14,7 +14,7 @@ import { ICharacter } from '@/types';
 })
 export default class CharacterCard extends Vue {
   @Prop()
-  private character?: ICharacter;
+  private character!: ICharacter;
  }
 </script>
 
