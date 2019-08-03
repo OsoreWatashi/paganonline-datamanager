@@ -63,7 +63,7 @@ export default class NodeCard extends Vue { }
 
     > .group {
       position: relative;
-      border: 1px solid rgb(25,25,25);
+      border: 1px solid rgba(253,253,253,0.5);
       border-radius: 5px;
       padding: 10px;
       display: flex;
@@ -77,8 +77,8 @@ export default class NodeCard extends Vue { }
         position: absolute;
         top: -10px;
         left: 7px;
-        color: rgb(25,25,25);
-        background: rgb(255,255,255);
+        color: rgb(219,191,143);
+        background: rgb(23,33,39);
         padding: 0 5px 0 5px;
       }
 
