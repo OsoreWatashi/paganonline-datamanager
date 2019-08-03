@@ -4,6 +4,7 @@
       <span class="group-header">Name</span>
       <label for="">Display name</label><input type="text" />
       <label for="">Technical name</label><input type="text" />
+      <label for="">Type</label><select><option>Ability</option><option>Major</option><option>Minor</option></select>
     </div>
     <div class="group description">
       <span class="group-header">Description</span>
