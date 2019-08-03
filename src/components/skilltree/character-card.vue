@@ -22,17 +22,24 @@ export default class CharacterCard extends Vue {
   .character-card {
     display: flex;
     flex-direction: column;
-
     color: black;
     text-decoration: none;
 
-    &.router-link-active {
-      color: blue;
-      font-weight: bold;
-    }
-
     > img {
       align-self: center;
+      filter: saturate(10%);
+    }
+
+    &.router-link-active {
+      > img {
+        filter: saturate(100%);
+      }
+    }
+
+    &:not(.router-link-active) {
+      > img:hover {
+        filter: saturate(33%);
+      }
     }
   }
 </style>
