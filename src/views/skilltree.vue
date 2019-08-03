@@ -31,7 +31,7 @@ export default class SkilltreeView extends Vue {
   .skilltree {
     .character-cards {
       display: flex;
-      flex-direction: row;
+      flex-flow: row wrap;
       justify-content: center;
 
       .character-card:not(:first-child) {
