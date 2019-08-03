@@ -17,7 +17,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import NodeFilter from '@/components/skilltree/node-filter.vue';
 import NodeTree from '@/components/skilltree/node-tree.vue';
 import NodeCard from '@/components/skilltree/node-card.vue';
-import { ICharacter } from '@/types';
 import CharacterFactory from '@/factories/skilltree/character-factory';
 
 @Component({

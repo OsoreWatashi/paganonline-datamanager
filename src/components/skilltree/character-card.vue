@@ -7,14 +7,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { ICharacter } from '@/types';
 
 @Component({
   name: 'character-card'
 })
 export default class CharacterCard extends Vue {
   @Prop()
-  private character!: ICharacter;
+  private character!: SkillTree.ICharacter;
  }
 </script>
 

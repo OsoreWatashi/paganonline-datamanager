@@ -1,6 +1,4 @@
-import { ICharacter } from '@/types';
-
-const characters: ICharacter[] = [
+const characters: SkillTree.ICharacter[] = [
   { displayName: 'Anya', technicalName: 'anya' },
   { displayName: 'Dameer', technicalName: 'dameer' },
   { displayName: 'Istok', technicalName: 'istok' },
@@ -11,11 +9,11 @@ const characters: ICharacter[] = [
   { displayName: 'Valeria', technicalName: 'valeria' }].sort((x, y) => x.displayName < y.displayName ? -1 : 1);
 
 export default class CharacterFactory {
-  public static getCharacters(): ReadonlyArray<ICharacter> {
+  public static getCharacters(): ReadonlyArray<SkillTree.ICharacter> {
     return characters;
   }
 
-  public static getCharacterByTechnicalName(technicalName: string): Readonly<ICharacter> | undefined {
+  public static getCharacterByTechnicalName(technicalName: string): Readonly<SkillTree.ICharacter> | undefined {
     return characters.find((x) => x.technicalName === technicalName);
   }
 }
