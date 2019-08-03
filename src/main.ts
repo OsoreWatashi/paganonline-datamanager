@@ -1,12 +1,19 @@
 import Vue from 'vue';
+import { Route } from 'vue-router';
 import App from './App.vue';
-import router from './router';
+import Router from './router';
 import Store from '@/store';
 
 Vue.config.productionTip = false;
 
+Router.afterEach((to: Route, from: Route) => {
+  if (to.path.startsWith('/skilltree')) {
+    Store.dispatch('SkillTree/ROUTE_CHANGED', to);
+  }
+});
+
 new Vue({
-  router,
+  'router': Router,
   'store': Store,
   render: (h) => h(App),
 }).$mount('#app');
