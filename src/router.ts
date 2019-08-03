@@ -21,7 +21,7 @@ export default new Router({
       children: [{
           path: ':char',
           name: 'character',
-          component: () => import('./components/skilltree.vue')
+          component: () => import('./views/skilltree/index.vue')
         }
       ]
     }
