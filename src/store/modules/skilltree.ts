@@ -27,7 +27,9 @@ export default class Store implements Module<SkillTree.IState, any> {
   public actions: ActionTree<SkillTree.IState, any> = {
     ROUTE_CHANGED(injectee: ActionContext<SkillTree.IState, any>, payload: Route): void {
       const character = CharacterFactory.getCharacterByTechnicalName(payload.params.char);
-      injectee.dispatch('SELECTED_CHARACTER', character);
+      if (character != null && character.technicalName !== injectee.state.character.technicalName) {
+        injectee.dispatch('SELECTED_CHARACTER', character);
+      }
 
       if (payload.params.id != null) {
         const id: number = parseInt(payload.params.id, 10);
