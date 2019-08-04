@@ -122,8 +122,10 @@ export default class Store implements Module<SkillTree.IState, any> {
         const matchFilter = nameRegex.test(node.displayName);
         injectee.commit('UPDATE_NODE', { node, property: 'matchFilter', value: matchFilter });
 
-        if (matchFilter === true && node.parent != null && node.parent.matchFilter === false) {
-          injectee.commit('UPDATE_NODE', { node: node.parent, property: 'matchFilter', value: true });
+        if (matchFilter === true) {
+          for (let parent = node.parent; node.parent != null && parent!.matchFilter !== true; parent = parent!.parent) {
+            injectee.commit('UPDATE_NODE', { node: node.parent, property: 'matchFilter', value: true });
+          }
         }
 
         for (const child of node.children) {
