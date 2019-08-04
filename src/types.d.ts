@@ -2,6 +2,7 @@ declare namespace SkillTree {
   interface IState {
     character: ICharacter;
     nodes: IViewNode[];
+    selectedNode: IViewNode | null;
   }
 
   interface ICharacter {

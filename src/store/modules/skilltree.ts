@@ -9,7 +9,8 @@ function defaultState(): SkillTree.IState {
     character: {
       displayName: '',
       technicalName: ''
-    }, nodes: []
+    }, nodes: [],
+    selectedNode: null
   };
 }
 
@@ -36,6 +37,7 @@ export default class Store implements Module<SkillTree.IState, any> {
 
       const nodes = NodeFactory.getNodes(character.technicalName);
       injectee.dispatch('NODES_UPDATED', nodes);
+      injectee.commit('SELECT_NODE', {});
     },
     NODES_UPDATED(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.INode[]): void {
       const nodeWalker = (node: SkillTree.IViewNode) => {
@@ -64,6 +66,11 @@ export default class Store implements Module<SkillTree.IState, any> {
       }
 
       injectee.commit('TOGGLE_NODE', { node: payload, toggleState });
+    },
+    SELECT_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode): void {
+      if (injectee.state.selectedNode == null || injectee.state.selectedNode.id !== payload.id) {
+        injectee.commit('SELECT_NODE', payload);
+      }
     }
   };
 
@@ -74,8 +81,11 @@ export default class Store implements Module<SkillTree.IState, any> {
     NODES_UPDATED(state: SkillTree.IState, payload: SkillTree.IViewNode[]): void {
       state.nodes = payload;
     },
-    TOGGLE_NODE(state: SkillTree.IState, payload: {node: SkillTree.IViewNode, toggleState: string}): void {
+    TOGGLE_NODE(state: SkillTree.IState, payload: { node: SkillTree.IViewNode, toggleState: string }): void {
       payload.node.toggleState = payload.toggleState;
+    },
+    SELECT_NODE(state: SkillTree.IState, payload: SkillTree.IViewNode): void {
+      state.selectedNode = payload.id != null ? payload : null;
     }
   };
 }

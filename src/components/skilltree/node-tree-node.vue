@@ -1,5 +1,5 @@
 <template>
-  <div class="node-tree-node">
+  <div class="node-tree-node" :class="selectedNode != null && selectedNode.id === node.id ? 'selected' : ''">
     <div class="display" @click="toggle">
       <span class="toggle">{{node.toggleState}}</span>
       <span class="display-name">{{node.displayName}}</span>
@@ -10,11 +10,14 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapState } from 'vuex';
 
 @Component({
   name: 'node-tree-node',
   components: {
     'node-tree': () => import('./node-tree.vue')
+  }, computed: {
+    ...mapState('SkillTree', ['selectedNode'])
   }
 })
 export default class NodeTreeNode extends Vue {
@@ -23,6 +26,7 @@ export default class NodeTreeNode extends Vue {
 
   public toggle(): void {
     this.$store.dispatch('SkillTree/TOGGLE_NODE', this.node);
+    this.$store.dispatch('SkillTree/SELECT_NODE', this.node);
   }
 }
 </script>
@@ -31,6 +35,10 @@ export default class NodeTreeNode extends Vue {
   .node-tree-node {
     > .display {
       cursor: pointer;
+    }
+
+    &.selected > .display > .display-name {
+      color: rgb(219,191,143);
     }
   }
 </style>
