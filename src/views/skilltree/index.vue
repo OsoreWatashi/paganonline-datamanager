@@ -8,7 +8,7 @@
 
     <node-filter />
     <node-tree :nodes="nodes" />
-    <node-card class="node-card" />
+    <node-card v-if="selectedNode != null" class="node-card" />
   </div>
 </template>
 
@@ -28,7 +28,7 @@ import CharacterFactory from '@/factories/skilltree/character-factory';
     'node-card': NodeCard
   },
   computed: {
-    ...mapState('SkillTree', ['nodes'])
+    ...mapState('SkillTree', ['nodes', 'selectedNode'])
   }
 })
 export default class Index extends Vue {
