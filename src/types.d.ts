@@ -11,6 +11,7 @@ declare namespace SkillTree {
 
   interface INode {
     id: number,
+    parentId?: number;
     displayName: string;
     technicalName: string;
     type: NodeType;
