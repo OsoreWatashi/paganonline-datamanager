@@ -1,8 +1,8 @@
 <template>
   <div class="node-tree-node" :class="selectedNode != null && selectedNode.id === node.id ? 'selected' : ''">
-    <div class="display" @click="select">
+    <div class="display">
       <fontawesome :icon="toggleState" class="toggler" @click="toggle" />
-      <span class="display-name">{{node.displayName}}</span>
+      <span class="display-name" @click="select">{{node.displayName}}</span>
     </div>
     <node-tree v-if="node.children.length > 0 && node.toggleState === '-'" :nodes="node.children"/>
   </div>
