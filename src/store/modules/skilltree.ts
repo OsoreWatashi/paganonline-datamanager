@@ -111,7 +111,6 @@ export default class Store implements Module<SkillTree.IState, any> {
       }
     },
     FILTER_UPDATED(injectee: ActionContext<SkillTree.IState, any>, payload: { property: string, value: any } | null) {
-
       if (payload != null) {
         injectee.commit('FILTER_UPDATED', payload);
       }
@@ -120,11 +119,13 @@ export default class Store implements Module<SkillTree.IState, any> {
         const nameRegex = new RegExp(injectee.state.filter.name, 'i');
 
         const matchFilter = nameRegex.test(node.displayName);
-        injectee.commit('UPDATE_NODE', { node, property: 'matchFilter', value: matchFilter });
+        if (node.matchFilter !== matchFilter) {
+          injectee.commit('UPDATE_NODE', { node, property: 'matchFilter', value: matchFilter });
+        }
 
         if (matchFilter === true) {
-          for (let parent = node.parent; node.parent != null && parent!.matchFilter !== true; parent = parent!.parent) {
-            injectee.commit('UPDATE_NODE', { node: node.parent, property: 'matchFilter', value: true });
+          for (let parent = node.parent; parent != null && parent.matchFilter !== true; parent = parent.parent) {
+            injectee.commit('UPDATE_NODE', { node: parent, property: 'matchFilter', value: true });
           }
         }
 
