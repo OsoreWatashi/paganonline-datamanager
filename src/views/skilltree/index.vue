@@ -7,13 +7,14 @@
     </div>
 
     <node-filter />
-    <node-tree />
+    <node-tree :nodes="nodes" />
     <node-card class="node-card" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { mapState } from 'vuex';
 import NodeFilter from '@/components/skilltree/node-filter.vue';
 import NodeTree from '@/components/skilltree/node-tree.vue';
 import NodeCard from '@/components/skilltree/node-card.vue';
@@ -25,6 +26,9 @@ import CharacterFactory from '@/factories/skilltree/character-factory';
     'node-filter': NodeFilter,
     'node-tree': NodeTree,
     'node-card': NodeCard
+  },
+  computed: {
+    ...mapState('SkillTree', ['nodes'])
   }
 })
 export default class Index extends Vue {

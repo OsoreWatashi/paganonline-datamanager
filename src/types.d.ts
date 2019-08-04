@@ -1,7 +1,7 @@
 declare namespace SkillTree {
   interface IState {
     character: ICharacter;
-    nodes: INode[];
+    nodes: IViewNode[];
   }
 
   interface ICharacter {
@@ -21,5 +21,10 @@ declare namespace SkillTree {
     ability = 'Ability',
     major = 'Major',
     minor = 'Minor'
+  }
+
+  interface IViewNode extends INode {
+    children: IViewNode[];
+    toggleState: string;
   }
 }

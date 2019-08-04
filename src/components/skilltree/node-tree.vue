@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import { mapState } from 'vuex';
 import NodeTreeNode from './node-tree-node.vue';
 
@@ -13,16 +13,20 @@ import NodeTreeNode from './node-tree-node.vue';
   name: 'node-tree',
   components: {
     'node-tree-node': NodeTreeNode
-  },
-  computed: {
-    ...mapState('SkillTree', ['nodes'])
   }
 })
-export default class NodeTree extends Vue { }
+export default class NodeTree extends Vue {
+  @Prop()
+  private nodes!: SkillTree.IViewNode[];
+}
 </script>
 
 <style lang="scss" scoped>
   .node-tree {
     text-align: left;
+
+    .node-tree {
+      margin-left: 20px;
+    }
   }
 </style>
