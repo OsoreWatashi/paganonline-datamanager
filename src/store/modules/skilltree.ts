@@ -1,5 +1,6 @@
 import { Module, ActionTree, ActionContext, MutationTree } from 'vuex';
 import { Route } from 'vue-router';
+import Router from '@/router';
 import CharacterFactory from '@/factories/skilltree/character-factory';
 import NodeFactory from '@/factories/skilltree/node-factory';
 
@@ -23,6 +24,31 @@ export default class Store implements Module<SkillTree.IState, any> {
     ROUTE_CHANGED(injectee: ActionContext<SkillTree.IState, any>, payload: Route): void {
       const character = CharacterFactory.getCharacterByTechnicalName(payload.params.char);
       injectee.dispatch('SELECTED_CHARACTER', character);
+
+      if (payload.params.id != null) {
+        const id: number = parseInt(payload.params.id, 10);
+        const nodeWalker = (node: SkillTree.IViewNode): boolean => {
+          if (node.id === id) {
+            injectee.commit('SELECT_NODE', node);
+            return true;
+          }
+
+          if (node.children.length > 0) {
+            for (const child of node.children) {
+              if (nodeWalker(child)) {
+                return true;
+              }
+            }
+          }
+
+          return false;
+        };
+        for (const node of injectee.state.nodes) {
+          if (nodeWalker(node)) {
+            break;
+          }
+        }
+      }
     },
     SELECTED_CHARACTER(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.ICharacter | string | undefined): void {
       let character = payload as SkillTree.ICharacter | undefined;
@@ -70,6 +96,7 @@ export default class Store implements Module<SkillTree.IState, any> {
     SELECT_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode): void {
       if (injectee.state.selectedNode == null || injectee.state.selectedNode.id !== payload.id) {
         injectee.commit('SELECT_NODE', payload);
+        Router.push({ path: '/skilltree/' + Router.currentRoute.params.char + '/' + payload.id });
       }
     }
   };

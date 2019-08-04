@@ -16,7 +16,12 @@ export default new Router({
       children: [{
           path: ':char',
           name: 'character',
-          component: () => import('./views/skilltree/index.vue')
+          component: () => import('./views/skilltree/index.vue'),
+
+          children: [{
+            path: ':id',
+            name: 'node'
+          }]
         }
       ]
     }
