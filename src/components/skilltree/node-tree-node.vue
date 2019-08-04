@@ -1,5 +1,5 @@
 <template>
-  <div class="node-tree-node" :class="selectedNode != null && selectedNode.id === node.id ? 'selected' : ''">
+  <div class="node-tree-node" :class="[selectedNode != null && selectedNode.id === node.id ? 'selected' : '', node.matchFilter !== true ? 'filtered' : '']">
     <div class="display">
       <fontawesome :icon="toggleState" class="toggler" @click="toggle" />
       <span class="display-name" @click="select">{{node.displayName}}</span>
@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
     'node-tree': () => import('./node-tree.vue'),
     'fontawesome': FontAwesomeIcon
   }, computed: {
-    ...mapState('SkillTree', ['selectedNode'])
+    ...mapState('SkillTree', ['selectedNode']),
   }
 })
 export default class NodeTreeNode extends Vue {
@@ -63,6 +63,10 @@ export default class NodeTreeNode extends Vue {
 
     &.selected > .display > .display-name {
       color: rgb(219,191,143);
+    }
+
+    &.filtered {
+      display: none;
     }
   }
 </style>

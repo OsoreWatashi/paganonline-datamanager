@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { Module, ActionTree, ActionContext, MutationTree } from 'vuex';
 import { Route } from 'vue-router';
 import Router from '@/router';
@@ -11,7 +12,10 @@ function defaultState(): SkillTree.IState {
       displayName: '',
       technicalName: ''
     }, nodes: [],
-    selectedNode: null
+    selectedNode: null,
+    filter: {
+      name: ''
+    }
   };
 }
 
@@ -81,6 +85,7 @@ export default class Store implements Module<SkillTree.IState, any> {
       }
 
       injectee.commit('NODES_UPDATED', rootNodes);
+      injectee.dispatch('FILTER_UPDATED', null);
     },
     TOGGLE_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode): void {
       let toggleState = ' ';
@@ -102,6 +107,30 @@ export default class Store implements Module<SkillTree.IState, any> {
         }
         Router.push({ path: '/skilltree/' + Router.currentRoute.params.char + '/' + payload.id });
       }
+    },
+    FILTER_UPDATED(injectee: ActionContext<SkillTree.IState, any>, payload: { property: string, value: any } | null) {
+
+      if (payload != null) {
+        injectee.commit('FILTER_UPDATED', payload);
+      }
+
+      const nodeWalker = (node: SkillTree.IViewNode) => {
+        const nameRegex = new RegExp(injectee.state.filter.name, 'i');
+
+        const matchFilter = nameRegex.test(node.displayName);
+        injectee.commit('UPDATE_NODE', { node, property: 'matchFilter', value: matchFilter });
+
+        if (matchFilter === true && node.parent != null && node.parent.matchFilter === false) {
+          injectee.commit('UPDATE_NODE', { node: node.parent, property: 'matchFilter', value: true });
+        }
+
+        for (const child of node.children) {
+          nodeWalker(child);
+        }
+      };
+      for (const node of injectee.state.nodes) {
+        nodeWalker(node);
+      }
     }
   };
 
@@ -119,8 +148,10 @@ export default class Store implements Module<SkillTree.IState, any> {
       state.selectedNode = payload.id != null ? payload : null;
     },
     UPDATE_NODE(state: SkillTree.IState, payload: { node: SkillTree.IViewNode, property: string, value: any }): void {
-      const castedNode = payload.node as any;
-      castedNode[payload.property] = payload.value;
+      Vue.set(payload.node, payload.property, payload.value);
+    },
+    FILTER_UPDATED(state: SkillTree.IState, payload: { property: string, value: any }): void {
+      Vue.set(state.filter, payload.property, payload.value);
     }
   };
 }

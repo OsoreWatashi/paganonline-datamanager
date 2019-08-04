@@ -3,6 +3,7 @@ declare namespace SkillTree {
     character: ICharacter;
     nodes: IViewNode[];
     selectedNode: IViewNode | null;
+    filter: INodeFilter;
   }
 
   interface ICharacter {
@@ -32,5 +33,10 @@ declare namespace SkillTree {
     parent?: IViewNode;
     children: IViewNode[];
     toggleState: string;
+    matchFilter: boolean;
+  }
+
+  interface INodeFilter {
+    name: string;
   }
 }
