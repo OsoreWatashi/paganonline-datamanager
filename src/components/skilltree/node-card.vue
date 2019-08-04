@@ -86,35 +86,28 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { Store, Computed } from 'vuex';
+import { Dictionary } from 'vue-router/types/router';
+
+const bindHelper = (properties: string[]): Dictionary<Computed> => {
+  const result: any = {};
+  for (const property of properties) {
+    result[property] = {
+      get() {
+        return this.$store.state.SkillTree.selectedNode[property];
+      }, set(value: any) {
+        this.$store.commit('SkillTree/UPDATE_NODE', { node: this.$store.state.SkillTree.selectedNode, property, value });
+      }
+    };
+  }
+
+  return result;
+};
 
 @Component({
   name: 'node-card',
   computed: {
-    id: {
-      get() {
-        return this.$store.state.SkillTree.selectedNode.id;
-      }, set(value) {
-        this.$store.commit('SkillTree/UPDATE_NODE', { node: this.$store.state.SkillTree.selectedNode, property: 'id', value });
-      }
-    }, displayName: {
-      get() {
-        return this.$store.state.SkillTree.selectedNode.displayName;
-      }, set(value) {
-        this.$store.commit('SkillTree/UPDATE_NODE', { node: this.$store.state.SkillTree.selectedNode, property: 'displayName', value });
-      }
-    }, technicalName: {
-      get() {
-        return this.$store.state.SkillTree.selectedNode.technicalName;
-      }, set(value) {
-        this.$store.commit('SkillTree/UPDATE_NODE', { node: this.$store.state.SkillTree.selectedNode, property: 'technicalName', value });
-      }
-    }, type: {
-      get() {
-        return this.$store.state.SkillTree.selectedNode.type;
-      }, set(value) {
-        this.$store.commit('SkillTree/UPDATE_NODE', { node: this.$store.state.SkillTree.selectedNode, property: 'type', value });
-      }
-    }
+    ...bindHelper(['id', 'displayName', 'technicalName', 'type'])
   }
 })
 export default class NodeCard extends Vue { }
