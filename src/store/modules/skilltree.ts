@@ -136,6 +136,10 @@ export default class Store implements Module<SkillTree.IState, any> {
       for (const node of injectee.state.nodes) {
         nodeWalker(node);
       }
+
+      if (injectee.state.selectedNode != null && injectee.state.selectedNode.matchFilter !== true) {
+        injectee.commit('SELECT_NODE', {});
+      }
     }
   };
 
