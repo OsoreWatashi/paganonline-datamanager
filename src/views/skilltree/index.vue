@@ -37,7 +37,7 @@ export default class Index extends Vue {
 
 <style lang="scss" scoped>
   .skilltree-view {
-    min-width: 650px;
+    min-width: 900px;
 
     .menu {
       display: flex;
