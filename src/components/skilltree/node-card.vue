@@ -17,16 +17,16 @@
     </div>
     <div class="group description">
       <span class="group-header">Description</span>
-      <textarea rows="5"></textarea>
+      <textarea rows="5" v-model="description"></textarea>
     </div>
     <div class="group numbers">
       <span class="group-header">Numbers</span>
       <label for>Level requirement</label>
-      <input type="number" />
+      <input type="number" v-model="levelRequirement" />
       <label for>Minimum points</label>
-      <input type="number" />
+      <input type="number" v-model="minimumPoints" />
       <label for>Maximum points</label>
-      <input type="number" />
+      <input type="number" v-model="maximumPoints" />
     </div>
     <div class="group effects">
       <span class="group-header">Effects</span>
@@ -107,7 +107,7 @@ const bindHelper = (properties: string[]): Dictionary<Computed> => {
 @Component({
   name: 'node-card',
   computed: {
-    ...bindHelper(['id', 'displayName', 'technicalName', 'type'])
+    ...bindHelper(['id', 'displayName', 'technicalName', 'type', 'description', 'levelRequirement', 'minimumPoints', 'maximumPoints'])
   }
 })
 export default class NodeCard extends Vue { }

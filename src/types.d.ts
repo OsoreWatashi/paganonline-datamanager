@@ -16,6 +16,10 @@ declare namespace SkillTree {
     displayName: string;
     technicalName: string;
     type: NodeType;
+    description: string;
+    levelRequirement: number;
+    minimumPoints: number;
+    maximumPoints: number;
   }
 
   enum NodeType {
