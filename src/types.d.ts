@@ -29,6 +29,7 @@ declare namespace SkillTree {
   }
 
   interface IViewNode extends INode {
+    parent?: IViewNode;
     children: IViewNode[];
     toggleState: string;
   }

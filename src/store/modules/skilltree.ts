@@ -29,7 +29,7 @@ export default class Store implements Module<SkillTree.IState, any> {
         const id: number = parseInt(payload.params.id, 10);
         const nodeWalker = (node: SkillTree.IViewNode): boolean => {
           if (node.id === id) {
-            injectee.commit('SELECT_NODE', node);
+            injectee.dispatch('SELECT_NODE', node);
             return true;
           }
 
@@ -70,6 +70,7 @@ export default class Store implements Module<SkillTree.IState, any> {
         node.children = payload.filter((x) => x.parentId === node.id) as SkillTree.IViewNode[];
         node.toggleState = node.children.length < 1 ? ' ' : node.toggleState || '+';
         for (const child of node.children) {
+          child.parent = node;
           nodeWalker(child);
         }
       };
@@ -96,6 +97,9 @@ export default class Store implements Module<SkillTree.IState, any> {
     SELECT_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode): void {
       if (injectee.state.selectedNode == null || injectee.state.selectedNode.id !== payload.id) {
         injectee.commit('SELECT_NODE', payload);
+        for (let parent = payload.parent; parent != null; parent = parent.parent) {
+          injectee.commit('TOGGLE_NODE', { node: parent, toggleState: '-' });
+        }
         Router.push({ path: '/skilltree/' + Router.currentRoute.params.char + '/' + payload.id });
       }
     }
