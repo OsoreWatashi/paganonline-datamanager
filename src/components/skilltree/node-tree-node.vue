@@ -54,6 +54,10 @@ export default class NodeTreeNode extends Vue {
 
       > .toggler {
         margin-right: 5px;
+
+        &.fa-stop-circle {
+          opacity: 0.5;
+        }
       }
     }
 
