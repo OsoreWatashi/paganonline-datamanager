@@ -6,8 +6,10 @@
       <a class="button" href="javascript:void(0)">Close node</a>
     </div>
 
-    <node-filter />
-    <node-tree :nodes="nodes" />
+    <div class="navigation">
+      <node-filter class="filter" />
+      <node-tree :nodes="nodes" />
+    </div>
     <node-card v-if="selectedNode != null" class="node-card" />
   </div>
 </template>
@@ -38,6 +40,16 @@ export default class Index extends Vue {
 <style lang="scss" scoped>
   .skilltree-view {
     min-width: 900px;
+
+    .navigation {
+      display: flex;
+      flex-direction: row;
+      flex-flow: row-reverse;
+
+      .filter {
+        margin-left: auto;
+      }
+    }
 
     .menu {
       display: flex;
