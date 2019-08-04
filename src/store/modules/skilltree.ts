@@ -86,6 +86,10 @@ export default class Store implements Module<SkillTree.IState, any> {
     },
     SELECT_NODE(state: SkillTree.IState, payload: SkillTree.IViewNode): void {
       state.selectedNode = payload.id != null ? payload : null;
+    },
+    UPDATE_NODE(state: SkillTree.IState, payload: { node: SkillTree.IViewNode, property: string, value: any }): void {
+      const castedNode = payload.node as any;
+      castedNode[payload.property] = payload.value;
     }
   };
 }
