@@ -21,6 +21,13 @@ declare namespace SkillTree {
     levelRequirement: number;
     minimumPoints: number;
     maximumPoints: number;
+
+    effects?: IEffect[];
+  }
+
+  interface IEffect {
+    id: number;
+    text: string;
   }
 
   enum NodeType {
@@ -30,6 +37,7 @@ declare namespace SkillTree {
   }
 
   interface IViewNode extends INode {
+    effects: IEffect[];
     parent?: IViewNode;
     children: IViewNode[];
     toggleState: string;

@@ -73,6 +73,7 @@ export default class Store implements Module<SkillTree.IState, any> {
     },
     NODES_UPDATED(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.INode[]): void {
       const nodeWalker = (node: SkillTree.IViewNode) => {
+        node.effects = node.effects || [];
         node.children = payload.filter((x) => x.parentId === node.id) as SkillTree.IViewNode[];
         node.toggleState = node.children.length < 1 ? ' ' : node.toggleState || '+';
         for (const child of node.children) {
@@ -157,7 +158,13 @@ export default class Store implements Module<SkillTree.IState, any> {
       state.selectedNode = payload.id != null ? payload : null;
     },
     UPDATE_NODE(state: SkillTree.IState, payload: { node: SkillTree.IViewNode, property: string, value: any }): void {
-      Vue.set(payload.node, payload.property, payload.value);
+      if (payload.property === 'effect') {
+        const payloadEffect = payload.value as SkillTree.IEffect;
+        const effect: SkillTree.IEffect = payload.node.effects.find((x) => x.id === payloadEffect.id)!;
+        Vue.set(effect, 'text', payloadEffect.text);
+      } else {
+        Vue.set(payload.node, payload.property, payload.value);
+      }
     },
     FILTER_UPDATED(state: SkillTree.IState, payload: { property: string, value: any }): void {
       Vue.set(state.filter, payload.property, payload.value);

@@ -31,20 +31,8 @@
     <div class="group effects">
       <span class="group-header">Effects</span>
       <div class="sets">
-        <div class="set">
-          <input type="text" />
-          <a href="javascript:void(0)" class="button">Remove</a>
-        </div>
-        <div class="set">
-          <input type="text" />
-          <a href="javascript:void(0)" class="button">Remove</a>
-        </div>
-        <div class="set">
-          <input type="text" />
-          <a href="javascript:void(0)" class="button">Remove</a>
-        </div>
-        <div class="set">
-          <input type="text" />
+        <div v-for="effect in effects" :key="effect.id" class="set">
+          <input type="text" :value="effect.text" @input="updateEffect" :data-id="effect.id" />
           <a href="javascript:void(0)" class="button">Remove</a>
         </div>
       </div>
@@ -107,10 +95,17 @@ const bindHelper = (properties: string[]): Dictionary<Computed> => {
 @Component({
   name: 'node-card',
   computed: {
-    ...bindHelper(['id', 'displayName', 'technicalName', 'type', 'description', 'levelRequirement', 'minimumPoints', 'maximumPoints'])
+    ...bindHelper(['id', 'displayName', 'technicalName', 'type', 'description', 'levelRequirement', 'minimumPoints', 'maximumPoints', 'effects'])
   }
 })
-export default class NodeCard extends Vue { }
+export default class NodeCard extends Vue {
+  public updateEffect(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const effect = { id: parseInt(input.dataset.id!, 10), text: input.value };
+
+    this.$store.commit('SkillTree/UPDATE_NODE', { node: this.$store.state.SkillTree.selectedNode, property: 'effect', value: effect });
+  }
+}
 </script>
 
 <style lang="scss" scoped>
