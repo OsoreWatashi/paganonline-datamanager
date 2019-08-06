@@ -19,6 +19,30 @@ function defaultState(): SkillTree.IState {
   };
 }
 
+function defaultEffect(): SkillTree.IEffect {
+  return {
+    text: ''
+  };
+}
+
+function defaultViewNode(): SkillTree.IViewNode {
+  return {
+    id: -1,
+    displayName: '',
+    technicalName: '',
+    type: 'Ability',
+    description: '',
+    levelRequirement: 1,
+    minimumPoints: 0,
+    maximumPoints: 3,
+
+    effects: [],
+    children: [],
+    toggleState: ' ',
+    matchFilter: true
+  };
+}
+
 export default class Store implements Module<SkillTree.IState, any> {
   public namespaced: boolean = true;
 
@@ -158,6 +182,31 @@ export default class Store implements Module<SkillTree.IState, any> {
       }
 
       injectee.commit('UPDATE_NODE', { node: payload.node, property: 'effects', value: payload.node.effects });
+    },
+    UPDATE_NODE_CHILDREN(injectee: ActionContext<SkillTree.IState, any>, payload: { node: SkillTree.IViewNode, action: string, child?: SkillTree.IViewNode }): void {
+      let index: number = -1;
+      switch (payload.action) {
+        case 'ADD':
+          const child = defaultViewNode();
+          child.id = -1;
+          child.parentId = payload.node.id;
+          child.parent = payload.node;
+
+          payload.node.children.push(child);
+          break;
+
+        case 'REMOVE':
+          index = payload.node.children.findIndex((x) => x.id === payload.child!.id);
+          payload.node.children.splice(index, 1);
+          break;
+
+        case 'UPDATE':
+          index = payload.node.children.findIndex((x) => x.id === payload.child!.id);
+          payload.node.children[index] = payload.child!;
+          break;
+      }
+
+      injectee.commit('UPDATE_NODE', { node: payload.node, property: 'children', value: payload.node.children });
     }
   };
 

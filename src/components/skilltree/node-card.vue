@@ -49,11 +49,11 @@
         </div>
         <div v-for="child in children" :key="child.id" class="set">
           <router-link :to="'/skilltree/' + $router.currentRoute.params.char + '/' + child.id">{{child.displayName}}</router-link>
-          <a href="javascript:void(0)" class="button">Remove</a>
+          <a href="javascript:void(0)" class="button" @click="deleteChild(child)">Delete</a>
         </div>
       </div>
       <div class="button-group">
-        <a class="button" href="javascript:void(0)">Add child</a>
+        <a class="button" href="javascript:void(0)" @click="addChild">Add child</a>
         <a class="button" href="javascript:void(0)">Update parent</a>
       </div>
     </div>
@@ -99,6 +99,14 @@ export default class NodeCard extends Vue {
 
   public addEffect(): void {
     this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'ADD' });
+  }
+
+  public deleteChild(child: SkillTree.IViewNode) {
+    this.$store.dispatch('SkillTree/UPDATE_NODE_CHILDREN', { node: this.$store.state.SkillTree.selectedNode, action: 'REMOVE', child });
+  }
+
+  public addChild() {
+    this.$store.dispatch('SkillTree/UPDATE_NODE_CHILDREN', { node: this.$store.state.SkillTree.selectedNode, action: 'ADD' });
   }
 }
 </script>
