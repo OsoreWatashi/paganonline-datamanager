@@ -33,11 +33,11 @@
       <div class="sets">
         <div v-for="(effect, index) in effects" :key="index" class="set">
           <input type="text" :value="effect.text" @input="updateEffect(index, $event)" />
-          <a href="javascript:void(0)" class="button">Remove</a>
+          <a href="javascript:void(0)" class="button" @click="removeEffect(index)">Remove</a>
         </div>
       </div>
       <div class="button-group">
-        <a class="button" href="javascript:void(0)">Add</a>
+        <a class="button" href="javascript:void(0)" @click="addEffect">Add</a>
       </div>
     </div>
     <div class="group hierarchy">
@@ -101,9 +101,16 @@ const bindHelper = (properties: string[]): Dictionary<Computed> => {
 export default class NodeCard extends Vue {
   public updateEffect(index: number, event: Event): void {
     const input = event.target as HTMLInputElement;
-    const payload = { text: input.value, index };
 
-    this.$store.commit('SkillTree/UPDATE_NODE', { node: this.$store.state.SkillTree.selectedNode, property: 'effect', value: payload });
+    this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'UPDATE', index, value: { text: input.value } });
+  }
+
+  public removeEffect(index: number): void {
+    this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'REMOVE', index });
+  }
+
+  public addEffect(): void {
+    this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'ADD' });
   }
 }
 </script>

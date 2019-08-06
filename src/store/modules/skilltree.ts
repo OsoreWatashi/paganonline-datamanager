@@ -111,7 +111,7 @@ export default class Store implements Module<SkillTree.IState, any> {
         Router.push({ path: '/skilltree/' + Router.currentRoute.params.char + '/' + payload.id });
       }
     },
-    FILTER_UPDATED(injectee: ActionContext<SkillTree.IState, any>, payload: { property: string, value: any } | null) {
+    FILTER_UPDATED(injectee: ActionContext<SkillTree.IState, any>, payload: { property: string, value: any } | null): void {
       if (payload != null) {
         injectee.commit('FILTER_UPDATED', payload);
       }
@@ -141,6 +141,23 @@ export default class Store implements Module<SkillTree.IState, any> {
       if (injectee.state.selectedNode != null && injectee.state.selectedNode.matchFilter !== true) {
         injectee.commit('SELECT_NODE', {});
       }
+    },
+    UPDATE_NODE_EFFECTS(injectee: ActionContext<SkillTree.IState, any>, payload: { node: SkillTree.IViewNode, action: string; index?: number, value?: SkillTree.IEffect }): void {
+      switch (payload.action) {
+        case 'ADD':
+          payload.node.effects.push({ text: '' });
+          break;
+
+        case 'REMOVE':
+          payload.node.effects.splice(payload.index!, 1);
+          break;
+
+        case 'UPDATE':
+          payload.node.effects[payload.index!] = payload.value!;
+          break;
+      }
+
+      injectee.commit('UPDATE_NODE', { node: payload.node, property: 'effects', value: payload.node.effects });
     }
   };
 
