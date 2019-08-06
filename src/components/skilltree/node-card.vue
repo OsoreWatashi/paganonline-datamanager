@@ -31,8 +31,8 @@
     <div class="group effects">
       <span class="group-header">Effects</span>
       <div class="sets">
-        <div v-for="effect in effects" :key="effect.id" class="set">
-          <input type="text" :value="effect.text" @input="updateEffect" :data-id="effect.id" />
+        <div v-for="(effect, index) in effects" :key="index" class="set">
+          <input type="text" :value="effect.text" @input="updateEffect(index, $event)" />
           <a href="javascript:void(0)" class="button">Remove</a>
         </div>
       </div>
@@ -99,11 +99,11 @@ const bindHelper = (properties: string[]): Dictionary<Computed> => {
   }
 })
 export default class NodeCard extends Vue {
-  public updateEffect(event: Event): void {
+  public updateEffect(index: number, event: Event): void {
     const input = event.target as HTMLInputElement;
-    const effect = { id: parseInt(input.dataset.id!, 10), text: input.value };
+    const payload = { text: input.value, index };
 
-    this.$store.commit('SkillTree/UPDATE_NODE', { node: this.$store.state.SkillTree.selectedNode, property: 'effect', value: effect });
+    this.$store.commit('SkillTree/UPDATE_NODE', { node: this.$store.state.SkillTree.selectedNode, property: 'effect', value: payload });
   }
 }
 </script>

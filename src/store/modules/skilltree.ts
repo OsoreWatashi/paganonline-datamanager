@@ -159,9 +159,9 @@ export default class Store implements Module<SkillTree.IState, any> {
     },
     UPDATE_NODE(state: SkillTree.IState, payload: { node: SkillTree.IViewNode, property: string, value: any }): void {
       if (payload.property === 'effect') {
-        const payloadEffect = payload.value as SkillTree.IEffect;
-        const effect: SkillTree.IEffect = payload.node.effects.find((x) => x.id === payloadEffect.id)!;
-        Vue.set(effect, 'text', payloadEffect.text);
+        const castedPayload = payload.value as { text: string, index: number };
+        const effect: SkillTree.IEffect = payload.node.effects[castedPayload.index];
+        Vue.set(effect, 'text', castedPayload.text);
       } else {
         Vue.set(payload.node, payload.property, payload.value);
       }

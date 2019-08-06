@@ -26,7 +26,6 @@ declare namespace SkillTree {
   }
 
   interface IEffect {
-    id: number;
     text: string;
   }
 
