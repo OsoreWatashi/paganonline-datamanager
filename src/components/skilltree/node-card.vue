@@ -47,21 +47,9 @@
           <label>Parent</label>
           <a href="javascript:void(0)" class="node-link">Parent node</a>
         </div>
-        <div class="set">
-          <a href="javascript:void(0)" class="node-link">Child I</a>
+        <div v-for="child in children" :key="child.id" class="set">
+          <router-link :to="'/skilltree/' + $router.currentRoute.params.char + '/' + child.id">{{child.displayName}}</router-link>
           <a href="javascript:void(0)" class="button">Remove</a>
-        </div>
-        <div class="set">
-          <a href="javascript:void(0)" class="node-link">Child II</a>
-          <a href="javascript:void(0)" class="button">Remove</a>
-        </div>
-        <div class="set">
-          <a href="javascript:void(0)" class="node-link">Child III</a>
-          <a href="javascript:void(0)" class="button">Remove</a>
-        </div>
-        <div class="set">
-          <input type="text" />
-          <a href="javascript:void(0)" class="button">Add</a>
         </div>
       </div>
       <div class="button-group">
@@ -95,7 +83,7 @@ const bindHelper = (properties: string[]): Dictionary<Computed> => {
 @Component({
   name: 'node-card',
   computed: {
-    ...bindHelper(['id', 'displayName', 'technicalName', 'type', 'description', 'levelRequirement', 'minimumPoints', 'maximumPoints', 'effects'])
+    ...bindHelper(['id', 'displayName', 'technicalName', 'type', 'description', 'levelRequirement', 'minimumPoints', 'maximumPoints', 'effects', 'children'])
   }
 })
 export default class NodeCard extends Vue {
@@ -198,6 +186,11 @@ export default class NodeCard extends Vue {
     &:not(:first-child) {
       margin-left: 5px;
     }
+  }
+
+  a {
+    color: rgb(253,253,253);
+    text-decoration: none;
   }
 }
 </style>
