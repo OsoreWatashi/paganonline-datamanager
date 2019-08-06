@@ -12,11 +12,11 @@ declare namespace SkillTree {
   }
 
   interface INode {
-    id: number,
+    id: number;
     parentId?: number;
     displayName: string;
     technicalName: string;
-    type: NodeType;
+    type: string;
     description: string;
     levelRequirement: number;
     minimumPoints: number;
@@ -27,12 +27,6 @@ declare namespace SkillTree {
 
   interface IEffect {
     text: string;
-  }
-
-  enum NodeType {
-    ability = 'Ability',
-    major = 'Major',
-    minor = 'Minor'
   }
 
   interface IViewNode extends INode {

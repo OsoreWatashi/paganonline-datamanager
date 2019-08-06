@@ -166,10 +166,10 @@ export default class Store implements Module<SkillTree.IState, any> {
         injectee.commit('SELECT_NODE', {});
       }
     },
-    UPDATE_NODE_EFFECTS(injectee: ActionContext<SkillTree.IState, any>, payload: { node: SkillTree.IViewNode, action: string; index?: number, value?: SkillTree.IEffect }): void {
+    UPDATE_NODE_EFFECTS(injectee: ActionContext<SkillTree.IState, any>, payload: { node: SkillTree.IViewNode, action: string; index?: number, effect?: SkillTree.IEffect }): void {
       switch (payload.action) {
         case 'ADD':
-          payload.node.effects.push({ text: '' });
+          payload.node.effects.push(defaultEffect());
           break;
 
         case 'REMOVE':
@@ -177,7 +177,7 @@ export default class Store implements Module<SkillTree.IState, any> {
           break;
 
         case 'UPDATE':
-          payload.node.effects[payload.index!] = payload.value!;
+          payload.node.effects[payload.index!] = payload.effect!;
           break;
       }
 
@@ -224,13 +224,7 @@ export default class Store implements Module<SkillTree.IState, any> {
       state.selectedNode = payload.id != null ? payload : null;
     },
     UPDATE_NODE(state: SkillTree.IState, payload: { node: SkillTree.IViewNode, property: string, value: any }): void {
-      if (payload.property === 'effect') {
-        const castedPayload = payload.value as { text: string, index: number };
-        const effect: SkillTree.IEffect = payload.node.effects[castedPayload.index];
-        Vue.set(effect, 'text', castedPayload.text);
-      } else {
-        Vue.set(payload.node, payload.property, payload.value);
-      }
+      Vue.set(payload.node, payload.property, payload.value);
     },
     FILTER_UPDATED(state: SkillTree.IState, payload: { property: string, value: any }): void {
       Vue.set(state.filter, payload.property, payload.value);

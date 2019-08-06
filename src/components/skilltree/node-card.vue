@@ -90,7 +90,7 @@ export default class NodeCard extends Vue {
   public updateEffect(index: number, event: Event): void {
     const input = event.target as HTMLInputElement;
 
-    this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'UPDATE', index, value: { text: input.value } });
+    this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'UPDATE', index, effect: { text: input.value } });
   }
 
   public removeEffect(index: number): void {
