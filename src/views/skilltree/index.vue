@@ -2,7 +2,7 @@
   <div class="skilltree-view">
     <div class="menu">
       <a class="button" href="javascript:void(0)" @click="addRootNode">Add root node</a>
-      <a class="button" href="javascript:void(0)" @click="deleteSelectedNode">Delete node</a>
+      <a class="button" href="javascript:void(0)" :class="this.$store.state.SkillTree.selectedNode == null ? 'disabled' : ''" @click="deleteSelectedNode">Delete node</a>
     </div>
 
     <div class="navigation">
