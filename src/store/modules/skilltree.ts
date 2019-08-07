@@ -28,8 +28,8 @@ function defaultEffect(): SkillTree.IEffect {
 function defaultViewNode(): SkillTree.IViewNode {
   return {
     id: -1,
-    displayName: '',
-    technicalName: '',
+    displayName: 'New ability',
+    technicalName: 'newability',
     type: 'Ability',
     description: '',
     levelRequirement: 1,
@@ -183,37 +183,38 @@ export default class Store implements Module<SkillTree.IState, any> {
 
       injectee.commit('UPDATE_NODE', { node: payload.node, property: 'effects', value: payload.node.effects });
     },
-    UPDATE_NODE_CHILDREN(injectee: ActionContext<SkillTree.IState, any>, payload: { node: SkillTree.IViewNode, action: string, child?: SkillTree.IViewNode }): void {
-      let index: number = -1;
-      switch (payload.action) {
-        case 'ADD':
-          const child = defaultViewNode();
-          child.id = -1;
-          child.parentId = payload.node.id;
-          child.parent = payload.node;
-          payload.node.children.push(child);
+    ADD_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode | null): void {
+      const node = defaultViewNode();
+      node.id = 1; // TODO
 
-          if (payload.node.children.length === 1) {
-            injectee.commit('TOGGLE_NODE', { node: payload.node, toggleState: '-' });
-          }
-          break;
+      if (payload != null) {
+        node.parentId = payload.id;
+        node.parent = payload;
+        payload.children.push(node);
+        injectee.commit('UPDATE_NODE', { node: payload, property: 'children', value: payload.children });
 
-        case 'REMOVE':
-          index = payload.node.children.findIndex((x) => x.id === payload.child!.id);
-          payload.node.children.splice(index, 1);
-
-          if (payload.node.children.length < 1) {
-            injectee.commit('TOGGLE_NODE', { node: payload.node, toggleState: ' ' });
-          }
-          break;
-
-        case 'UPDATE':
-          index = payload.node.children.findIndex((x) => x.id === payload.child!.id);
-          payload.node.children[index] = payload.child!;
-          break;
+        if (payload.children.length === 1) {
+          injectee.commit('TOGGLE_NODE', { node: payload, toggleState: '-' });
+        }
+      } else {
+        injectee.state.nodes.push(node);
+        injectee.commit('NODES_UPDATED', injectee.state.nodes);
       }
+    },
+    DELETE_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode): void {
+      if (payload.parent != null) {
+        const index = payload.parent.children.findIndex((x) => x.id === payload.id);
+        payload.parent.children.splice(index, 1);
+        injectee.commit('UPDATE_NODE', { node: payload.parent, property: 'children', value: payload.parent.children });
 
-      injectee.commit('UPDATE_NODE', { node: payload.node, property: 'children', value: payload.node.children });
+        if (payload.parent.children.length < 1) {
+          injectee.commit('TOGGLE_NODE', { node: payload.parent, toggleState: ' ' });
+        }
+      } else {
+        const index = injectee.state.nodes.findIndex((x) => x.id === payload.id);
+        injectee.state.nodes.splice(index, 1);
+        injectee.commit('NODES_UPDATED', injectee.state.nodes);
+      }
     }
   };
 

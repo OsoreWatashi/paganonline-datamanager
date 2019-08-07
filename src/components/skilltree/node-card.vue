@@ -102,11 +102,11 @@ export default class NodeCard extends Vue {
   }
 
   public deleteChild(child: SkillTree.IViewNode) {
-    this.$store.dispatch('SkillTree/UPDATE_NODE_CHILDREN', { node: this.$store.state.SkillTree.selectedNode, action: 'REMOVE', child });
+    this.$store.dispatch('SkillTree/DELETE_NODE', child);
   }
 
   public addChild() {
-    this.$store.dispatch('SkillTree/UPDATE_NODE_CHILDREN', { node: this.$store.state.SkillTree.selectedNode, action: 'ADD' });
+    this.$store.dispatch('SkillTree/ADD_NODE', this.$store.state.SkillTree.selectedNode );
   }
 }
 </script>

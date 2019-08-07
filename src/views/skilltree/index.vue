@@ -1,9 +1,8 @@
 <template>
   <div class="skilltree-view">
     <div class="menu">
-      <a class="button disabled" href="javascript:void(0)">Add node</a>
-      <a class="button" href="javascript:void(0)">Save node</a>
-      <a class="button" href="javascript:void(0)">Close node</a>
+      <a class="button" href="javascript:void(0)" @click="addRootNode">Add root node</a>
+      <a class="button" href="javascript:void(0)" @click="deleteSelectedNode">Delete node</a>
     </div>
 
     <div class="navigation">
@@ -34,6 +33,13 @@ import CharacterFactory from '@/factories/skilltree/character-factory';
   }
 })
 export default class Index extends Vue {
+  public addRootNode(): void {
+    this.$store.dispatch('SkillTree/ADD_NODE', null);
+  }
+
+  public deleteSelectedNode(): void {
+    this.$store.dispatch('SkillTree/DELETE_NODE', this.$store.state.SkillTree.selectedNode);
+  }
 }
 </script>
 
