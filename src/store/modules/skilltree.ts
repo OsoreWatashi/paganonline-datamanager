@@ -207,6 +207,9 @@ export default class Store implements Module<SkillTree.IState, any> {
       }
 
       injectee.commit('UPDATE_NODE', { node: payload.node, property: 'children', value: payload.node.children });
+      if (payload.node.children.length < 1) {
+        injectee.commit('TOGGLE_NODE', { node: payload.node, toggleState: ' ' });
+      }
     }
   };
 
