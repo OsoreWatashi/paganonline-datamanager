@@ -78,6 +78,8 @@ export default class Store implements Module<SkillTree.IState, any> {
             break;
           }
         }
+      } else {
+        injectee.commit('SELECT_NODE', {});
       }
     },
     SELECTED_CHARACTER(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.ICharacter | string | undefined): void {
@@ -214,6 +216,10 @@ export default class Store implements Module<SkillTree.IState, any> {
         const index = injectee.state.nodes.findIndex((x) => x.id === payload.id);
         injectee.state.nodes.splice(index, 1);
         injectee.commit('NODES_UPDATED', injectee.state.nodes);
+      }
+
+      if (injectee.state.selectedNode!.id === payload.id) {
+        injectee.commit('SELECT_NODE', {});
       }
     }
   };
