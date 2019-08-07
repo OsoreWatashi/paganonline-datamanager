@@ -191,13 +191,20 @@ export default class Store implements Module<SkillTree.IState, any> {
           child.id = -1;
           child.parentId = payload.node.id;
           child.parent = payload.node;
-
           payload.node.children.push(child);
+
+          if (payload.node.children.length === 1) {
+            injectee.commit('TOGGLE_NODE', { node: payload.node, toggleState: '-' });
+          }
           break;
 
         case 'REMOVE':
           index = payload.node.children.findIndex((x) => x.id === payload.child!.id);
           payload.node.children.splice(index, 1);
+
+          if (payload.node.children.length < 1) {
+            injectee.commit('TOGGLE_NODE', { node: payload.node, toggleState: ' ' });
+          }
           break;
 
         case 'UPDATE':
@@ -207,9 +214,6 @@ export default class Store implements Module<SkillTree.IState, any> {
       }
 
       injectee.commit('UPDATE_NODE', { node: payload.node, property: 'children', value: payload.node.children });
-      if (payload.node.children.length < 1) {
-        injectee.commit('TOGGLE_NODE', { node: payload.node, toggleState: ' ' });
-      }
     }
   };
 
