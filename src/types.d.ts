@@ -4,6 +4,7 @@ declare namespace SkillTree {
     nodes: IViewNode[];
     selectedNode: IViewNode | null;
     filter: INodeFilter;
+    highestNodeId: number;
   }
 
   interface ICharacter {

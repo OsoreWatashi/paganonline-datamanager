@@ -15,7 +15,8 @@ function defaultState(): SkillTree.IState {
     selectedNode: null,
     filter: {
       name: ''
-    }
+    },
+    highestNodeId: 0
   };
 }
 
@@ -98,6 +99,7 @@ export default class Store implements Module<SkillTree.IState, any> {
       injectee.commit('SELECT_NODE', {});
     },
     NODES_UPDATED(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.INode[]): void {
+      let highestNodeId: number = 0;
       const nodeWalker = (node: SkillTree.IViewNode) => {
         node.effects = node.effects || [];
         node.children = payload.filter((x) => x.parentId === node.id) as SkillTree.IViewNode[];
@@ -105,6 +107,10 @@ export default class Store implements Module<SkillTree.IState, any> {
         for (const child of node.children) {
           child.parent = node;
           nodeWalker(child);
+        }
+
+        if (node.id > highestNodeId) {
+          highestNodeId = node.id;
         }
       };
 
@@ -114,6 +120,7 @@ export default class Store implements Module<SkillTree.IState, any> {
       }
 
       injectee.commit('NODES_UPDATED', rootNodes);
+      injectee.commit('HIGHEST_NODE_ID_CHANGED', highestNodeId);
       injectee.dispatch('FILTER_UPDATED', null);
     },
     TOGGLE_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode): void {
@@ -187,7 +194,7 @@ export default class Store implements Module<SkillTree.IState, any> {
     },
     ADD_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode | null): void {
       const node = defaultViewNode();
-      node.id = 1; // TODO
+      node.id = injectee.state.highestNodeId + 1;
 
       if (payload != null) {
         node.parentId = payload.id;
@@ -202,6 +209,8 @@ export default class Store implements Module<SkillTree.IState, any> {
         injectee.state.nodes.push(node);
         injectee.commit('NODES_UPDATED', injectee.state.nodes);
       }
+
+      injectee.commit('HIGHEST_NODE_ID_CHANGED', node.id);
     },
     DELETE_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode): void {
       if (payload.parent != null) {
@@ -242,6 +251,9 @@ export default class Store implements Module<SkillTree.IState, any> {
     },
     FILTER_UPDATED(state: SkillTree.IState, payload: { property: string, value: any }): void {
       Vue.set(state.filter, payload.property, payload.value);
+    },
+    HIGHEST_NODE_ID_CHANGED(state: SkillTree.IState, payload: number) {
+      state.highestNodeId = payload;
     }
   };
 }
