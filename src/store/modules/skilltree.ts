@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { Module, ActionTree, ActionContext, MutationTree } from 'vuex';
+import { Module, ActionTree, ActionContext, MutationTree, GetterTree } from 'vuex';
 import { Route } from 'vue-router';
 import Router from '@/router';
 import CharacterFactory from '@/factories/skilltree/character-factory';
@@ -16,7 +16,8 @@ function defaultState(): SkillTree.IState {
     filter: {
       name: ''
     },
-    highestNodeId: 0
+    highestNodeId: 0,
+    updatedNodes: []
   };
 }
 
@@ -48,6 +49,12 @@ export default class Store implements Module<SkillTree.IState, any> {
   public namespaced: boolean = true;
 
   public state: SkillTree.IState = defaultState();
+
+  public getters: GetterTree<SkillTree.IState, any> = {
+    nodesUpdated(state: SkillTree.IState): boolean {
+      return state.updatedNodes.some((x) => x.character.technicalName === state.character.technicalName);
+    }
+  };
 
   public actions: ActionTree<SkillTree.IState, any> = {
     ROUTE_CHANGED(injectee: ActionContext<SkillTree.IState, any>, payload: Route): void {
@@ -249,6 +256,12 @@ export default class Store implements Module<SkillTree.IState, any> {
     },
     UPDATE_NODE(state: SkillTree.IState, payload: { node: SkillTree.IViewNode, property: string, value: any }): void {
       Vue.set(payload.node, payload.property, payload.value);
+
+      if (['parent', 'children', 'toggleState', 'matchFilter'].every((x) => x !== payload.property)) {
+        if (!state.updatedNodes.some((x) => x.character.technicalName === state.character.technicalName && x.node.id === payload.node.id)) {
+          state.updatedNodes.push({ character: state.character, node: payload.node });
+        }
+      }
     },
     FILTER_UPDATED(state: SkillTree.IState, payload: { property: string, value: any }): void {
       Vue.set(state.filter, payload.property, payload.value);

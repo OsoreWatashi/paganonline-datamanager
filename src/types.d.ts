@@ -5,6 +5,7 @@ declare namespace SkillTree {
     selectedNode: IViewNode | null;
     filter: INodeFilter;
     highestNodeId: number;
+    updatedNodes: IUpdatedNode[];
   }
 
   interface ICharacter {
@@ -36,6 +37,11 @@ declare namespace SkillTree {
     children: IViewNode[];
     toggleState: string;
     matchFilter: boolean;
+  }
+
+  interface IUpdatedNode {
+    character: ICharacter;
+    node: INode;
   }
 
   interface INodeFilter {

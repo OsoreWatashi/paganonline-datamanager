@@ -1,8 +1,13 @@
 <template>
   <div class="skilltree-view">
     <div class="menu">
-      <a class="button" href="javascript:void(0)" @click="addRootNode">Add root node</a>
-      <a class="button" href="javascript:void(0)" :class="this.$store.state.SkillTree.selectedNode == null ? 'disabled' : ''" @click="deleteSelectedNode">Delete node</a>
+      <div class="menu-left">
+        <a href="javascript:void(0)" class="button" :class="nodesUpdated === false ? 'disabled' : ''" @click="saveCharacter">Save character</a>
+      </div>
+      <div class="menu-right">
+        <a class="button" href="javascript:void(0)" @click="addRootNode">Add root node</a>
+        <a class="button" href="javascript:void(0)" :class="this.$store.state.SkillTree.selectedNode == null ? 'disabled' : ''" @click="deleteSelectedNode">Delete node</a>
+      </div>
     </div>
 
     <div class="navigation">
@@ -15,7 +20,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import NodeFilter from '@/components/skilltree/node-filter.vue';
 import NodeTree from '@/components/skilltree/node-tree.vue';
 import NodeCard from '@/components/skilltree/node-card.vue';
@@ -29,16 +34,23 @@ import CharacterFactory from '@/factories/skilltree/character-factory';
     'node-card': NodeCard
   },
   computed: {
+    ...mapGetters('SkillTree', ['nodesUpdated']),
     ...mapState('SkillTree', ['nodes', 'selectedNode'])
   }
 })
 export default class Index extends Vue {
+  public saveCharacter(): void {
+
+  }
+
   public addRootNode(): void {
     this.$store.dispatch('SkillTree/ADD_NODE', null);
   }
 
   public deleteSelectedNode(): void {
-    this.$store.dispatch('SkillTree/DELETE_NODE', this.$store.state.SkillTree.selectedNode);
+    if (this.$store.state.SkillTree.selectedNode != null) {
+      this.$store.dispatch('SkillTree/DELETE_NODE', this.$store.state.SkillTree.selectedNode);
+    }
   }
 }
 </script>
@@ -63,6 +75,13 @@ export default class Index extends Vue {
       align-items: flex-end;
       margin-bottom: 10px;
 
+      > div {
+        display: flex;
+      }
+      .menu-right {
+        margin-left: auto;
+      }
+
       .button {
         font-size: 16px;
         padding: 10px;
@@ -76,9 +95,6 @@ export default class Index extends Vue {
           cursor: not-allowed;
         }
 
-        &:first-child {
-          margin-left: auto;
-        }
         &:not(:first-child) {
           margin-left: 5px;
         }
