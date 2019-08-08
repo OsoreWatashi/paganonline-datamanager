@@ -238,6 +238,10 @@ export default class Store implements Module<SkillTree.IState, any> {
       if (injectee.state.selectedNode!.id === payload.id) {
         injectee.commit('SELECT_NODE', {});
       }
+    },
+    SAVE_CHARACTER(injectee: ActionContext<SkillTree.IState, any>, payload: null) {
+      // TOOD: Submit state.updatedNodes somewhere
+      injectee.commit('CHARACTER_SAVED', {});
     }
   };
 
@@ -266,8 +270,10 @@ export default class Store implements Module<SkillTree.IState, any> {
     FILTER_UPDATED(state: SkillTree.IState, payload: { property: string, value: any }): void {
       Vue.set(state.filter, payload.property, payload.value);
     },
-    HIGHEST_NODE_ID_CHANGED(state: SkillTree.IState, payload: number) {
+    HIGHEST_NODE_ID_CHANGED(state: SkillTree.IState, payload: number): void {
       state.highestNodeId = payload;
+    }, CHARACTER_SAVED(state: SkillTree.IState, payload: null): void {
+      state.updatedNodes = state.updatedNodes.filter((x) => x.character.technicalName !== state.character.technicalName);
     }
   };
 }

@@ -40,7 +40,7 @@ import CharacterFactory from '@/factories/skilltree/character-factory';
 })
 export default class Index extends Vue {
   public saveCharacter(): void {
-
+    this.$store.dispatch('SkillTree/SAVE_CHARACTER', null);
   }
 
   public addRootNode(): void {
