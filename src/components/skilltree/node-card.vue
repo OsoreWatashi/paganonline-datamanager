@@ -43,9 +43,9 @@
     <div class="group hierarchy">
       <span class="group-header">Hierarchy</span>
       <div class="sets">
-        <div class="set">
+        <div class="set" v-if="parent != null">
           <label>Parent</label>
-          <a href="javascript:void(0)" class="node-link">Parent node</a>
+          <router-link :to="'/skilltree/' + $router.currentRoute.params.char + '/' + parent.id">{{parent.displayName}}</router-link>
         </div>
         <div v-for="child in children" :key="child.id" class="set">
           <router-link :to="'/skilltree/' + $router.currentRoute.params.char + '/' + child.id">{{child.displayName}}</router-link>
@@ -83,7 +83,7 @@ const bindHelper = (properties: string[]): Dictionary<Computed> => {
 @Component({
   name: 'node-card',
   computed: {
-    ...bindHelper(['id', 'displayName', 'technicalName', 'type', 'description', 'levelRequirement', 'minimumPoints', 'maximumPoints', 'effects', 'children'])
+    ...bindHelper(['id', 'displayName', 'technicalName', 'type', 'description', 'levelRequirement', 'minimumPoints', 'maximumPoints', 'effects', 'children', 'parent'])
   }
 })
 export default class NodeCard extends Vue {
