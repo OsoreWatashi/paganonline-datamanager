@@ -53,8 +53,7 @@
         </div>
       </div>
       <div class="button-group">
-        <a class="button" href="javascript:void(0)" @click="addChild">Add child</a>
-        <a class="button" href="javascript:void(0)">Update parent</a>
+        <a class="button" href="javascript:void(0)" @click="addChild">Add</a>
       </div>
     </div>
   </div>
