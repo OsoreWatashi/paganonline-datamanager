@@ -211,6 +211,7 @@ export default class Store implements Module<SkillTree.IState, any> {
       }
 
       injectee.commit('HIGHEST_NODE_ID_CHANGED', node.id);
+      injectee.dispatch('SELECT_NODE', node);
     },
     DELETE_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode): void {
       if (payload.parent != null) {
