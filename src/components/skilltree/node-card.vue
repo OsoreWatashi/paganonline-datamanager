@@ -76,7 +76,12 @@ const bindHelper = (properties: string[]): Dictionary<Computed> => {
       get() {
         return this.$store.state.SkillTree.selectedNode[property];
       }, set(value: any) {
-        this.$store.commit('SkillTree/UPDATE_NODE', { node: this.$store.state.SkillTree.selectedNode, property, value });
+        if (['id', 'levelRequirement', 'minimumPoints', 'maximumPoints'].some((x) => x === property)) {
+          const parsedValue = parseInt(value, 10);
+          this.$store.commit('SkillTree/UPDATE_NODE', { node: this.$store.state.SkillTree.selectedNode, property, value: parsedValue });
+        } else {
+          this.$store.commit('SkillTree/UPDATE_NODE', { node: this.$store.state.SkillTree.selectedNode, property, value });
+        }
       }
     };
   }
