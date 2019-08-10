@@ -31,12 +31,17 @@
     <div class="group effects">
       <span class="group-header">Effects</span>
       <div class="sets">
-        <div v-for="(effect, index) in effects" :key="index" class="set">
+        <div v-for="(effect, index) in filteredEffects()" :key="index" class="set">
           <input type="text" :value="effect.text" @input="updateEffect(index, $event)" />
           <a href="javascript:void(0)" class="button" @click="removeEffect(index)">Remove</a>
         </div>
       </div>
       <div class="button-group">
+        <ul v-if="maximumPoints > 1" class="levels">
+          <li v-for="level in maximumPoints" :key=level>
+            <input type="radio" name="ability-level" :value="level" v-model="selectedLevel" /><label class="no-colon">Level {{level}}</label>
+          </li>
+        </ul>
         <a class="button" href="javascript:void(0)" @click="addEffect">Add</a>
       </div>
     </div>
@@ -82,10 +87,17 @@ const bindHelper = (properties: string[]): Dictionary<Computed> => {
 @Component({
   name: 'node-card',
   computed: {
-    ...bindHelper(['id', 'displayName', 'technicalName', 'type', 'description', 'levelRequirement', 'minimumPoints', 'maximumPoints', 'effects', 'children', 'parent'])
+    ...bindHelper(['id', 'displayName', 'technicalName', 'type', 'description', 'levelRequirement', 'minimumPoints', 'maximumPoints', 'children', 'parent'])
   }
 })
 export default class NodeCard extends Vue {
+  private selectedLevel: number = 1;
+
+  public filteredEffects(): SkillTree.IEffect[] {
+    const effects = this.$store.state.SkillTree.selectedNode.effects;
+    return effects;
+  }
+
   public updateEffect(index: number, event: Event): void {
     const input = event.target as HTMLInputElement;
 
@@ -171,7 +183,7 @@ export default class NodeCard extends Vue {
       margin-left: 10px;
     }
 
-    &::after {
+    &:not(.no-colon)::after {
       content: ":";
     }
   }
@@ -179,6 +191,15 @@ export default class NodeCard extends Vue {
   .button-group {
     margin-left: auto;
     display: flex;
+
+    .levels {
+      list-style: none;
+      margin: 0 10px 0 0;
+      
+      input {
+        width: auto;
+      }
+    }
   }
 
   .button {
