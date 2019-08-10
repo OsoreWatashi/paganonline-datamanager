@@ -31,9 +31,9 @@
     <div class="group effects">
       <span class="group-header">Effects</span>
       <div class="sets">
-        <div v-for="(effect, index) in filteredEffects()" :key="index" class="set">
-          <input type="text" :value="effect.text" @input="updateEffect(index, $event)" />
-          <a href="javascript:void(0)" class="button" @click="removeEffect(index)">Remove</a>
+        <div v-for="effect in filteredEffects()" :key="effect.sequence" class="set">
+          <input type="text" :value="effect.text" @input="updateEffect(effect, $event)" />
+          <a href="javascript:void(0)" class="button" @click="removeEffect(effect)">Remove</a>
         </div>
       </div>
       <div class="button-group">
@@ -87,29 +87,35 @@ const bindHelper = (properties: string[]): Dictionary<Computed> => {
 @Component({
   name: 'node-card',
   computed: {
-    ...bindHelper(['id', 'displayName', 'technicalName', 'type', 'description', 'levelRequirement', 'minimumPoints', 'maximumPoints', 'children', 'parent'])
+    ...bindHelper(['id', 'displayName', 'technicalName', 'type', 'description', 'levelRequirement', 'minimumPoints', 'maximumPoints', 'effects', 'children', 'parent'])
   }
 })
 export default class NodeCard extends Vue {
   private selectedLevel: number = 1;
 
   public filteredEffects(): SkillTree.IEffect[] {
-    const effects = this.$store.state.SkillTree.selectedNode.effects;
-    return effects;
+    const effects: SkillTree.IEffect[] = this.$store.state.SkillTree.selectedNode.effects;
+    if (effects == null || effects.length < 1) {
+      return effects;
+    }
+
+    const filteredEffects = effects.filter((x) => x.level === this.selectedLevel);
+    return filteredEffects;
   }
 
-  public updateEffect(index: number, event: Event): void {
+  public updateEffect(effect: SkillTree.IEffect, event: Event): void {
     const input = event.target as HTMLInputElement;
+    effect.text = input.value;
 
-    this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'UPDATE', index, effect: { text: input.value } });
+    this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'UPDATE', effect });
   }
 
-  public removeEffect(index: number): void {
-    this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'REMOVE', index });
+  public removeEffect(effect: SkillTree.IEffect): void {
+    this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'REMOVE', effect });
   }
 
   public addEffect(): void {
-    this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'ADD' });
+    this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'ADD', level: this.selectedLevel });
   }
 
   public deleteChild(child: SkillTree.IViewNode) {

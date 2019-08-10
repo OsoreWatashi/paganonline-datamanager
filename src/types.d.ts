@@ -28,6 +28,8 @@ declare namespace SkillTree {
   }
 
   interface IEffect {
+    level: number;
+    sequence: number;
     text: string;
   }
 

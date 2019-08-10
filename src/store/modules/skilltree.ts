@@ -23,6 +23,8 @@ function defaultState(): SkillTree.IState {
 
 function defaultEffect(): SkillTree.IEffect {
   return {
+    level: 1,
+    sequence: 1,
     text: ''
   };
 }
@@ -182,18 +184,25 @@ export default class Store implements Module<SkillTree.IState, any> {
         injectee.commit('SELECT_NODE', {});
       }
     },
-    UPDATE_NODE_EFFECTS(injectee: ActionContext<SkillTree.IState, any>, payload: { node: SkillTree.IViewNode, action: string; index?: number, effect?: SkillTree.IEffect }): void {
+    UPDATE_NODE_EFFECTS(injectee: ActionContext<SkillTree.IState, any>, payload: { node: SkillTree.IViewNode, action: string; level?: number, effect?: SkillTree.IEffect }): void {
+      let index: number = -1;
       switch (payload.action) {
         case 'ADD':
-          payload.node.effects.push(defaultEffect());
+          const effect = defaultEffect();
+          effect.level = payload.level!;
+          effect.sequence = payload.node.effects.length < 1 ? 1 : (payload.node.effects.filter((x) => x.level === payload.level!).reduce((x, y) => x.sequence > y.sequence ? x : y).sequence + 1);
+
+          payload.node.effects.push(effect);
           break;
 
         case 'REMOVE':
-          payload.node.effects.splice(payload.index!, 1);
+          index = payload.node.effects.findIndex((x) => x.level === payload.effect!.level && x.sequence === payload.effect!.sequence);
+          payload.node.effects.splice(index, 1);
           break;
 
         case 'UPDATE':
-          payload.node.effects[payload.index!] = payload.effect!;
+          index = payload.node.effects.findIndex((x) => x.level === payload.effect!.level && x.sequence === payload.effect!.sequence);
+          payload.node.effects[index] = payload.effect!;
           break;
       }
 
