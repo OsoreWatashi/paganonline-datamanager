@@ -1,19 +1,17 @@
-const characters: SkillTree.ICharacter[] = [
-  { displayName: 'Anya', technicalName: 'anya' },
-  { displayName: 'Dameer', technicalName: 'dameer' },
-  { displayName: 'Istok', technicalName: 'istok' },
-  { displayName: 'Kingewitch', technicalName: 'kingewitch' },
-  { displayName: 'Lukian', technicalName: 'lukian' },
-  { displayName: 'Morokh', technicalName: 'morokh' },
-  { displayName: 'Masha', technicalName: 'masha' },
-  { displayName: 'Valeria', technicalName: 'valeria' }].sort((x, y) => x.displayName < y.displayName ? -1 : 1);
-
 export default class CharacterFactory {
-  public static getCharacters(): ReadonlyArray<SkillTree.ICharacter> {
-    return characters;
+  private static characters: SkillTree.ICharacter[];
+
+  public static async getCharacters(): Promise<ReadonlyArray<SkillTree.ICharacter>> {
+    if (CharacterFactory.characters == null) {
+      const result = await fetch(`${process.env.VUE_APP_API}/character`);
+      CharacterFactory.characters = await result.json();
+    }
+
+    return CharacterFactory.characters;
   }
 
-  public static getCharacterByTechnicalName(technicalName: string): Readonly<SkillTree.ICharacter> | undefined {
+  public static async getCharacterByTechnicalName(technicalName: string): Promise<Readonly<SkillTree.ICharacter> | undefined> {
+    const characters = await CharacterFactory.getCharacters();
     return characters.find((x) => x.technicalName === technicalName);
   }
 }

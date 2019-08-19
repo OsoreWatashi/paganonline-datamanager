@@ -21,8 +21,12 @@ import CharacterFactory from '@/factories/skilltree/character-factory';
   }
 })
 export default class SkilltreeView extends Vue {
-  public get characters(): ReadonlyArray<SkillTree.ICharacter> {
-    return CharacterFactory.getCharacters();
+  private get characters(): ReadonlyArray<SkillTree.ICharacter> {
+    if (this.$store.state.SkillTree.characters.length < 1) {
+      this.$store.dispatch('SkillTree/LOAD_CHARACTERS');
+    }
+
+    return this.$store.state.SkillTree.characters;
   }
 }
 </script>

@@ -8,7 +8,8 @@ import NodeFactory from '@/factories/skilltree/node-factory';
 
 function defaultState(): SkillTree.IState {
   return {
-    character: {
+    characters: [],
+    selectedCharacter: {
       displayName: '',
       technicalName: ''
     }, nodes: [],
@@ -54,14 +55,14 @@ export default class Store implements Module<SkillTree.IState, any> {
 
   public getters: GetterTree<SkillTree.IState, any> = {
     nodesUpdated(state: SkillTree.IState): boolean {
-      return state.updatedNodes.some((x) => x.character.technicalName === state.character.technicalName);
+      return state.updatedNodes.some((x) => x.character.technicalName === state.selectedCharacter.technicalName);
     }
   };
 
   public actions: ActionTree<SkillTree.IState, any> = {
-    ROUTE_CHANGED(injectee: ActionContext<SkillTree.IState, any>, payload: Route): void {
-      const character = CharacterFactory.getCharacterByTechnicalName(payload.params.char);
-      if (character != null && character.technicalName !== injectee.state.character.technicalName) {
+    async ROUTE_CHANGED(injectee: ActionContext<SkillTree.IState, any>, payload: Route): Promise<void> {
+      const character = await CharacterFactory.getCharacterByTechnicalName(payload.params.char);
+      if (character != null && character.technicalName !== injectee.state.selectedCharacter.technicalName) {
         injectee.dispatch('SELECTED_CHARACTER', character);
       }
 
@@ -92,13 +93,17 @@ export default class Store implements Module<SkillTree.IState, any> {
         injectee.commit('SELECT_NODE', {});
       }
     },
-    SELECTED_CHARACTER(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.ICharacter | string | undefined): void {
+    async LOAD_CHARACTERS(injectee: ActionContext<SkillTree.IState, any>, payload: undefined): Promise<void> {
+      const characters = await CharacterFactory.getCharacters();
+      injectee.commit('SET_CHARACTERS', characters);
+    },
+    async SELECTED_CHARACTER(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.ICharacter | string | undefined): Promise<void> {
       let character = payload as SkillTree.ICharacter | undefined;
       if (typeof payload === 'string') {
-        character = CharacterFactory.getCharacterByTechnicalName(payload);
+        character = await CharacterFactory.getCharacterByTechnicalName(payload);
       }
       if (character == null) {
-        character = defaultState().character;
+        character = defaultState().selectedCharacter;
       }
 
       injectee.commit('SELECTED_CHARACTER', character);
@@ -260,8 +265,11 @@ export default class Store implements Module<SkillTree.IState, any> {
   };
 
   public mutations: MutationTree<SkillTree.IState> = {
+    SET_CHARACTERS(state: SkillTree.IState, payload: SkillTree.ICharacter[]): void {
+      state.characters = payload;
+    },
     SELECTED_CHARACTER(state: SkillTree.IState, payload: SkillTree.ICharacter): void {
-      state.character = payload;
+      state.selectedCharacter = payload;
     },
     NODES_UPDATED(state: SkillTree.IState, payload: SkillTree.IViewNode[]): void {
       state.nodes = payload;
@@ -276,8 +284,8 @@ export default class Store implements Module<SkillTree.IState, any> {
       Vue.set(payload.node, payload.property, payload.value);
 
       if (['parent', 'children', 'toggleState', 'matchFilter'].every((x) => x !== payload.property)) {
-        if (!state.updatedNodes.some((x) => x.character.technicalName === state.character.technicalName && x.node.id === payload.node.id)) {
-          state.updatedNodes.push({ character: state.character, node: payload.node });
+        if (!state.updatedNodes.some((x) => x.character.technicalName === state.selectedCharacter.technicalName && x.node.id === payload.node.id)) {
+          state.updatedNodes.push({ character: state.selectedCharacter, node: payload.node });
         }
       }
     },
@@ -287,7 +295,7 @@ export default class Store implements Module<SkillTree.IState, any> {
     HIGHEST_NODE_ID_CHANGED(state: SkillTree.IState, payload: number): void {
       state.highestNodeId = payload;
     }, CHARACTER_SAVED(state: SkillTree.IState, payload: null): void {
-      state.updatedNodes = state.updatedNodes.filter((x) => x.character.technicalName !== state.character.technicalName);
+      state.updatedNodes = state.updatedNodes.filter((x) => x.character.technicalName !== state.selectedCharacter.technicalName);
     }
   };
 }
