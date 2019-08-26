@@ -1,18 +1,12 @@
-import Anya from '@/assets/skilltree/characters/nodes/anya';
-
 export default class NodeFactory {
-  public static getNodes(character: string): SkillTree.INode[] {
-    switch (character) {
-      case 'anya': return Anya;
-      case 'dameer': return[];
-      case 'istok': return [];
-      case 'kingewitch': return[];
-      case 'lukian': return[];
-      case 'masha': return[];
-      case 'morokh': return[];
-      case 'valeria': return[];
+  private static nodes: Map<string, SkillTree.INode[]> = new Map<string, SkillTree.INode[]>();
 
-      default: return [];
+  public static async getNodes(character: string): Promise<SkillTree.INode[]> {
+    if (NodeFactory.nodes.has(character) === false) {
+      const result = await fetch(`${process.env.VUE_APP_API}/skill/${character}`);
+      NodeFactory.nodes.set(character, await result.json());
     }
+
+    return NodeFactory.nodes.get(character) || [];
   }
 }

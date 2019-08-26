@@ -108,7 +108,7 @@ export default class Store implements Module<SkillTree.IState, any> {
 
       injectee.commit('SELECTED_CHARACTER', character);
 
-      const nodes = NodeFactory.getNodes(character.technicalName);
+      const nodes = await NodeFactory.getNodes(character.technicalName);
       injectee.dispatch('NODES_UPDATED', nodes);
       injectee.commit('SELECT_NODE', {});
     },
@@ -116,7 +116,7 @@ export default class Store implements Module<SkillTree.IState, any> {
       let highestNodeId: number = 0;
       const nodeWalker = (node: SkillTree.IViewNode) => {
         node.effects = node.effects || [];
-        node.children = payload.filter((x) => x.parentId === node.id) as SkillTree.IViewNode[];
+        node.children = payload.filter((x) => x.parentID === node.id) as SkillTree.IViewNode[];
         node.toggleState = node.children.length < 1 ? ' ' : node.toggleState || '+';
         for (const child of node.children) {
           child.parent = node;
@@ -128,7 +128,7 @@ export default class Store implements Module<SkillTree.IState, any> {
         }
       };
 
-      const rootNodes = payload.filter((x) => x.parentId == null) as SkillTree.IViewNode[];
+      const rootNodes = payload.filter((x) => x.parentID == null) as SkillTree.IViewNode[];
       for (const rootNode of rootNodes) {
         nodeWalker(rootNode);
       }
@@ -223,7 +223,7 @@ export default class Store implements Module<SkillTree.IState, any> {
       node.id = injectee.state.highestNodeId + 1;
 
       if (payload != null) {
-        node.parentId = payload.id;
+        node.parentID = payload.id;
         node.parent = payload;
         payload.children.push(node);
         injectee.commit('UPDATE_NODE', { node: payload, property: 'children', value: payload.children });
