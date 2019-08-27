@@ -202,7 +202,7 @@ export default class Store implements Module<SkillTree.IState, any> {
           if (payload.node.effects.length > 0) {
             const sameLevelEffects = payload.node.effects.filter((x) => x.level === payload.level!);
             if (sameLevelEffects.length > 0) {
-              effect.level = sameLevelEffects.reduce((x, y) => x.level > y.level ? x : y).level + 1;
+              effect.sequence = sameLevelEffects.reduce((x, y) => x.level > y.level ? x : y).sequence + 1;
             }
           }
 
