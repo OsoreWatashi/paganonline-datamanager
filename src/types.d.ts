@@ -34,6 +34,7 @@ declare namespace SkillTree {
     level: number;
     sequence: number;
     description: string;
+    isDeleted: boolean;
   }
 
   interface IViewNode extends INode {

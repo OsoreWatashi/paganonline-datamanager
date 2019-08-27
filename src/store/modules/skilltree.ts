@@ -26,7 +26,8 @@ function defaultEffect(): SkillTree.IEffect {
   return {
     level: 1,
     sequence: 1,
-    description: ''
+    description: '',
+    isDeleted: false
   };
 }
 
@@ -221,8 +222,7 @@ export default class Store implements Module<SkillTree.IState, any> {
           break;
 
         case 'REMOVE':
-          index = payload.node.effects.findIndex((x) => x.level === payload.effect!.level && x.sequence === payload.effect!.sequence);
-          payload.node.effects.splice(index, 1);
+          payload.effect!.isDeleted = true;
           break;
 
         case 'UPDATE':

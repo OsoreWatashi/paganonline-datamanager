@@ -104,7 +104,7 @@ export default class NodeCard extends Vue {
       return effects;
     }
 
-    const filteredEffects = effects.filter((x) => x.level === this.selectedLevel);
+    const filteredEffects = effects.filter((x) => x.level === this.selectedLevel && x.isDeleted !== true);
     return filteredEffects;
   }
 
