@@ -41,6 +41,7 @@ function defaultViewNode(): SkillTree.IViewNode {
     minimumPoints: 0,
     maximumPoints: 3,
     isNew: true,
+    isDeleted: false,
 
     effects: [],
     children: [],
@@ -254,18 +255,19 @@ export default class Store implements Module<SkillTree.IState, any> {
       injectee.dispatch('SELECT_NODE', node);
     },
     DELETE_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode): void {
-      if (payload.parent != null) {
-        const index = payload.parent.children.findIndex((x) => x.id === payload.id);
-        payload.parent.children.splice(index, 1);
-        injectee.commit('UPDATE_NODE', { node: payload.parent, property: 'children', value: payload.parent.children });
+      injectee.commit('UPDATE_NODE', { node: payload, property: 'isDeleted', value: true });
 
-        if (payload.parent.children.length < 1) {
+      if (payload.parent != null) {
+        if (payload.parent.children.every((x) => x.isDeleted === true)) {
           injectee.commit('TOGGLE_NODE', { node: payload.parent, toggleState: ' ' });
         }
       } else {
-        const index = injectee.state.nodes.findIndex((x) => x.id === payload.id);
-        injectee.state.nodes.splice(index, 1);
         injectee.commit('NODES_UPDATED', injectee.state.nodes);
+      }
+
+      const children = injectee.state.nodes.filter((x) => x.parentID === payload.id);
+      for (const child of children) {
+        injectee.dispatch('DELETE_NODE', child);
       }
 
       if (injectee.state.selectedNode!.id === payload.id) {
@@ -298,8 +300,11 @@ export default class Store implements Module<SkillTree.IState, any> {
       Vue.set(payload.node, payload.property, payload.value);
 
       if (payload.skipUpdate !== true && ['parent', 'children', 'toggleState', 'matchFilter'].every((x) => x !== payload.property)) {
-        if (!state.updatedNodes.some((x) => x.character.technicalName === state.selectedCharacter.technicalName && x.node.id === payload.node.id)) {
+        const index = state.updatedNodes.findIndex((x) => x.character.technicalName === state.selectedCharacter.technicalName && x.node.id === payload.node.id);
+        if (index < 0) {
           state.updatedNodes.push({ character: state.selectedCharacter, node: payload.node });
+        } else {
+          state.updatedNodes[index].node = payload.node;
         }
       }
     },

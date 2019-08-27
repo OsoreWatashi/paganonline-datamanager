@@ -52,7 +52,7 @@
           <label>Parent</label>
           <router-link :to="'/skilltree/' + $router.currentRoute.params.char + '/' + parent.id">{{parent.displayName}}</router-link>
         </div>
-        <div v-for="child in children" :key="child.id" class="set">
+        <div v-for="child in children.filter((x) => x.isDeleted !== true)" :key="child.id" class="set">
           <router-link :to="'/skilltree/' + $router.currentRoute.params.char + '/' + child.id">{{child.displayName}}</router-link>
           <a href="javascript:void(0)" class="button" @click="deleteChild(child)">Delete</a>
         </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="node-tree">
-    <node-tree-node v-for="node in nodes" :key="node.id" :node="node" />
+    <node-tree-node v-for="node in nodes.filter((x) => x.isDeleted !== true)" :key="node.id" :node="node" />
   </div>
 </template>
 

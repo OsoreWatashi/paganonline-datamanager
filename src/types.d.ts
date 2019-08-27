@@ -25,6 +25,7 @@ declare namespace SkillTree {
     minimumPoints: number;
     maximumPoints: number;
     isNew: boolean;
+    isDeleted: boolean;
 
     effects?: IEffect[];
   }

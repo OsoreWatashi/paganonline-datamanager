@@ -4,7 +4,7 @@
       <fontawesome :icon="toggleState" class="toggler" @click="toggle" />
       <span class="display-name" @click="select">{{node.displayName}}</span>
     </div>
-    <node-tree v-if="node.children.length > 0 && node.toggleState === '-'" :nodes="node.children"/>
+    <node-tree v-if="node.children.length > 0 && node.toggleState === '-'" :nodes="node.children.filter((x) => x.isDeleted !== true)"/>
   </div>
 </template>
 
