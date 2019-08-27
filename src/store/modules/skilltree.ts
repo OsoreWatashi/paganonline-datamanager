@@ -40,6 +40,7 @@ function defaultViewNode(): SkillTree.IViewNode {
     levelRequirement: 1,
     minimumPoints: 0,
     maximumPoints: 3,
+    isNew: true,
 
     effects: [],
     children: [],
@@ -109,6 +110,15 @@ export default class Store implements Module<SkillTree.IState, any> {
       injectee.commit('SELECTED_CHARACTER', character);
 
       const nodes = await NodeFactory.getNodes(character.technicalName);
+      if (character != null) {
+        const updatedNodes = injectee.state.updatedNodes.filter((x) => x.character.technicalName === character!.technicalName &&
+                                                                       x.node.isNew === true &&
+                                                                       nodes.every((y) => y.id !== x.node.id));
+        for (const updatedNode of updatedNodes) {
+          nodes.push(updatedNode.node);
+        }
+      }
+
       injectee.dispatch('NODES_UPDATED', nodes);
       injectee.commit('SELECT_NODE', {});
     },
