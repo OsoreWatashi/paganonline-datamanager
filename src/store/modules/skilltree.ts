@@ -26,7 +26,7 @@ function defaultEffect(): SkillTree.IEffect {
   return {
     level: 1,
     sequence: 1,
-    text: ''
+    description: ''
   };
 }
 
@@ -115,7 +115,6 @@ export default class Store implements Module<SkillTree.IState, any> {
     NODES_UPDATED(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.INode[]): void {
       let highestNodeId: number = 0;
       const nodeWalker = (node: SkillTree.IViewNode) => {
-        node.effects = node.effects || [];
         node.children = payload.filter((x) => x.parentID === node.id) as SkillTree.IViewNode[];
         node.toggleState = node.children.length < 1 ? ' ' : node.toggleState || '+';
         for (const child of node.children) {
@@ -149,13 +148,18 @@ export default class Store implements Module<SkillTree.IState, any> {
 
       injectee.commit('TOGGLE_NODE', { node: payload, toggleState });
     },
-    SELECT_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode): void {
+    async SELECT_NODE(injectee: ActionContext<SkillTree.IState, any>, payload: SkillTree.IViewNode): Promise<void> {
       if (injectee.state.selectedNode == null || injectee.state.selectedNode.id !== payload.id) {
         injectee.commit('SELECT_NODE', payload);
         for (let parent = payload.parent; parent != null; parent = parent.parent) {
           injectee.commit('TOGGLE_NODE', { node: parent, toggleState: '-' });
         }
         Router.push({ path: '/skilltree/' + Router.currentRoute.params.char + '/' + payload.id });
+
+        if (payload.effects == null) {
+          const effects = await NodeFactory.getEffects(payload);
+          injectee.commit('UPDATE_NODE', { node: payload, property: 'effects', value: effects });
+        }
       }
     },
     FILTER_UPDATED(injectee: ActionContext<SkillTree.IState, any>, payload: { property: string, value: any } | null): void {

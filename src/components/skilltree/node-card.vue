@@ -32,7 +32,7 @@
       <span class="group-header">Effects</span>
       <div class="sets">
         <div v-for="effect in filteredEffects()" :key="effect.sequence" class="set">
-          <input type="text" :value="effect.text" @input="updateEffect(effect, $event)" />
+          <input type="text" :value="effect.description" @input="updateEffect(effect, $event)" />
           <a href="javascript:void(0)" class="button" @click="removeEffect(effect)">Remove</a>
         </div>
       </div>
@@ -110,7 +110,7 @@ export default class NodeCard extends Vue {
 
   public updateEffect(effect: SkillTree.IEffect, event: Event): void {
     const input = event.target as HTMLInputElement;
-    effect.text = input.value;
+    effect.description = input.value;
 
     this.$store.dispatch('SkillTree/UPDATE_NODE_EFFECTS', { node: this.$store.state.SkillTree.selectedNode, action: 'UPDATE', effect });
   }
