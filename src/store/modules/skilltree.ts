@@ -158,7 +158,7 @@ export default class Store implements Module<SkillTree.IState, any> {
 
         if (payload.effects == null) {
           const effects = await NodeFactory.getEffects(payload);
-          injectee.commit('UPDATE_NODE', { node: payload, property: 'effects', value: effects });
+          injectee.commit('UPDATE_NODE', { node: payload, property: 'effects', value: effects, skipUpdate: true });
         }
       }
     },
@@ -284,10 +284,10 @@ export default class Store implements Module<SkillTree.IState, any> {
     SELECT_NODE(state: SkillTree.IState, payload: SkillTree.IViewNode): void {
       state.selectedNode = payload.id != null ? payload : null;
     },
-    UPDATE_NODE(state: SkillTree.IState, payload: { node: SkillTree.IViewNode, property: string, value: any }): void {
+    UPDATE_NODE(state: SkillTree.IState, payload: { node: SkillTree.IViewNode, property: string, value: any, skipUpdate?: boolean }): void {
       Vue.set(payload.node, payload.property, payload.value);
 
-      if (['parent', 'children', 'toggleState', 'matchFilter'].every((x) => x !== payload.property)) {
+      if (payload.skipUpdate !== true && ['parent', 'children', 'toggleState', 'matchFilter'].every((x) => x !== payload.property)) {
         if (!state.updatedNodes.some((x) => x.character.technicalName === state.selectedCharacter.technicalName && x.node.id === payload.node.id)) {
           state.updatedNodes.push({ character: state.selectedCharacter, node: payload.node });
         }
