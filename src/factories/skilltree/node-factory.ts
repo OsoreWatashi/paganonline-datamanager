@@ -12,6 +12,6 @@ export default class NodeFactory {
 
   public static async getEffects(node: SkillTree.INode): Promise<SkillTree.IEffect[]> {
     const result = await fetch(`${process.env.VUE_APP_API}/skilleffect/${node.id}`);
-    return await result.json();
+    return await result.json() || [];
   }
 }
