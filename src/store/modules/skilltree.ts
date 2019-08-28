@@ -27,6 +27,7 @@ function defaultEffect(): SkillTree.IEffect {
     level: 1,
     sequence: 1,
     description: '',
+    isNew: true,
     isDeleted: false
   };
 }
@@ -274,9 +275,55 @@ export default class Store implements Module<SkillTree.IState, any> {
         injectee.commit('SELECT_NODE', {});
       }
     },
-    SAVE_CHARACTER(injectee: ActionContext<SkillTree.IState, any>, payload: null) {
-      // TOOD: Submit state.updatedNodes somewhere
+    async SAVE_CHARACTER(injectee: ActionContext<SkillTree.IState, any>, payload: null): Promise<void> {
+      const updatedNodes = injectee.state.updatedNodes.filter((x) => x.character.technicalName === injectee.state.selectedCharacter.technicalName);
+      for (const updatedNode of updatedNodes) {
+        if (updatedNode.node.isNew && updatedNode.node.isDeleted) {
+          continue;
+        }
+
+        if (updatedNode.node.isDeleted) {
+          if (updatedNode.node.effects != null) {
+            for (const effect of updatedNode.node.effects) {
+              if (effect.isNew !== true) {
+                await NodeFactory.deleteEffect(updatedNode.node.id, effect.level, effect.sequence);
+              }
+            }
+          }
+          await NodeFactory.deleteNode(updatedNode.character.technicalName, updatedNode.node.technicalName);
+        } else {
+          if (updatedNode.node.isNew) {
+            const originalID = updatedNode.node.id;
+            await NodeFactory.createNode(updatedNode.character.technicalName, updatedNode.node);
+            const children = updatedNodes.filter((x) => x.node.parentID === originalID);
+            for (const child of children) {
+              child.node.parentID = updatedNode.node.id;
+            }
+          } else {
+            await NodeFactory.updateNode(updatedNode.character.technicalName, updatedNode.node);
+          }
+
+          if (updatedNode.node.effects != null) {
+            for (const effect of updatedNode.node.effects) {
+              if (effect.isNew && effect.isDeleted) {
+                continue;
+              }
+
+              if (effect.isDeleted) {
+                await NodeFactory.deleteEffect(updatedNode.node.id, effect.level, effect.sequence);
+              } else if (effect.isNew) {
+                await NodeFactory.createEffect(updatedNode.node.id, effect);
+              } else {
+                await NodeFactory.updateEffect(updatedNode.node.id, effect);
+              }
+            }
+          }
+        }
+      }
+
+      NodeFactory.removeCache(injectee.state.selectedCharacter.technicalName);
       injectee.commit('CHARACTER_SAVED', {});
+      injectee.dispatch('SELECTED_CHARACTER', injectee.state.selectedCharacter);
     }
   };
 
